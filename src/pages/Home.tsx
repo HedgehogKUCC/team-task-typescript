@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import '../assets/scss/components/_home.scss';
 
 const Home = () => {
   // 輪播資料
@@ -38,22 +39,22 @@ const Home = () => {
           {
             carouselList.map((item, index) => {
               return (<div key={item.id} className={`carousel-item ${index === activeIndex ? 'active' : ''}`}>
-                <figure className="ratio ratio-16x9 overflow-hidden mb-0">
-                  <img src={item.img} className="d-block w-100" alt={`Slide ${index + 1}`} />
-                </figure>
+                <picture className="carousel-picture">
+                  <img src={item.img} className="carousel-img" alt={`Slide ${index + 1}`} />
+                </picture>
               </div>);
             })
           }
         </div>
-        <div style={{ zIndex: 1, backgroundColor: 'rgb(0 0 0 / 60%)' }} className="position-absolute top-0 start-0 w-100 h-100">
-          <div className="container h-100 d-flex  justify-content-between align-items-center">
-            <h1 style={{ width: '35%' }} className="text-primary fw-bold border-bottom border-2 border-primary pb-7 mb-0">享樂酒店
-              <span className="d-block h4 mb-0 mt-2">Enjoyment Luxury Hotel</span>
+        <div className="carousel_content_wrap">
+          <div className="container carousel_container">
+            <h1 className="carousel_name">享樂酒店
+              <span>Enjoyment Luxury Hotel</span>
             </h1>
-            <div style={{ width: '55%', background: 'linear-gradient(rgb(255 255 255 / 0%), rgb(255 255 255 / 30%))', borderRadius: '80px' }} className="border-top border-end">
-              <div className="px-9 py-8 ms-n10">
-                <h2 style={{ fontSize: '100px' }} className='fw-bold'>高雄<br />豪華住宿之選</h2>
-                <p className="fs-3 fw-semibold mt-5 mb-8 text_neutral_40">我們致力於為您提供無與倫比的奢華體驗與優質服務</p>
+            <div className="carousel_content_block">
+              <div className="carousel_content">
+                <h2 className="carousel_title">高雄<br />豪華住宿之選</h2>
+                <h3 className='carousel_subtitle'>我們致力於為您提供無與倫比的奢華體驗與優質服務</h3>
                 <button type="button" className="py-3 btn btn-light btn-lg w-100 fw-bold">立即訂房</button>
               </div>
             </div>
