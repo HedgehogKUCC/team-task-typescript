@@ -1,12 +1,21 @@
-// Figma 2% => 0.32px，5% => 0.8px
+// Figma 2% => 0.02em，5% => 0.05em
 // https://www.unitsconverters.com/en/-To-Px/Utu-4854-4853
-$letter-spacing-base: 0.32px;
-$letter-spacing-heading: 0.8px;
+$letter-spacing-base: 0.02em;
+$letter-spacing-heading: 0.05em;
+$line-height-base: 1.5em;
+$line-height-heading: 1.2em;
 
 body {
   letter-spacing: $letter-spacing-base;
+  line-height: $line-height-base;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   letter-spacing: $letter-spacing-heading;
+  line-height: $line-height-heading;
 }
