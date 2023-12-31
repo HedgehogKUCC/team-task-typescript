@@ -1,5 +1,14 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
+
+import { useAppDispatch } from "../store/hook";
+import { setEmail, setPassword } from "../store/slices/signUpSlice";
+
+import { apiVerifyEmail } from "../api";
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 interface IFormInputs {
   email: string;
@@ -7,8 +16,20 @@ interface IFormInputs {
   confirmPassword: string;
 }
 
+interface IApiVerifyEmailResponseData {
+  state: boolean;
+  result: {
+    isEmailExists: boolean;
+  };
+  message?: string;
+}
+
 const SignUp = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     formState: { errors },
@@ -17,11 +38,36 @@ const SignUp = () => {
   } = useForm<IFormInputs>({ mode: "onTouched" });
 
   const onSubmit: SubmitHandler<IFormInputs> = (data) => {
-    console.log(data);
-  };
+    dispatch(setEmail(data.email));
+    dispatch(setPassword(data.password));
 
-  const onClickHandler = () => {
-    navigate("fill_info");
+    setIsLoading(true);
+    apiVerifyEmail({ email: data.email })
+      .then((res) => {
+        const isEmailExists = (res.data as IApiVerifyEmailResponseData).result
+          .isEmailExists;
+
+        if (isEmailExists) {
+          withReactContent(Swal).fire({
+            text: "此電子信箱已被註冊",
+            icon: "warning",
+            showConfirmButton: false,
+          });
+        } else {
+          navigate("fill_info");
+        }
+      })
+      .catch((err) => {
+        withReactContent(Swal).fire({
+          text:
+            (err?.data as IApiVerifyEmailResponseData)?.message || "API Error",
+          icon: "error",
+          showConfirmButton: false,
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -69,6 +115,7 @@ const SignUp = () => {
               }`}
               id="email"
               placeholder="hello@example.com"
+              autoComplete="username"
               {...register("email", {
                 required: {
                   value: true,
@@ -95,6 +142,7 @@ const SignUp = () => {
               }`}
               id="password"
               placeholder="請輸入密碼"
+              autoComplete="new-password"
               {...register("password", {
                 required: {
                   value: true,
@@ -121,6 +169,7 @@ const SignUp = () => {
               }`}
               id="confirmPassword"
               placeholder="請再輸入一次密碼"
+              autoComplete="new-password"
               {...register("confirmPassword", {
                 required: {
                   value: true,
@@ -141,7 +190,15 @@ const SignUp = () => {
               type="submit"
               className="py-3 btn btn-light btn-lg w-100 fw-bold"
             >
-              下一步
+              {isLoading ? (
+                <span
+                  style={{ width: "1.5rem", height: "1.5rem" }}
+                  className="spinner-border spinner-border-sm"
+                  aria-hidden="true"
+                ></span>
+              ) : (
+                "下一步"
+              )}
             </button>
           </div>
         </form>
