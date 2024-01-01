@@ -61,8 +61,7 @@ const SignUp = () => {
       })
       .catch((err) => {
         MySwal.fire({
-          text:
-            (err?.data as IApiVerifyEmailResponseData)?.message || "API Error",
+          text: (err?.response?.data as IApiVerifyEmailResponseData)?.message,
           icon: "error",
           showConfirmButton: false,
         });

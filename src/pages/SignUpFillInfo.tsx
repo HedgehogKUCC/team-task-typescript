@@ -7,6 +7,7 @@ import { selectSignUp } from "../store/slices/signUpSlice";
 
 import CheckIcon from "/ic_check.svg";
 import ZipCodes from "../utils/zipcodes";
+import { apiUserSignUp } from "../api";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -20,10 +21,16 @@ interface IFormInputs {
   checkbox: boolean;
 }
 
+interface IApiUserSignUpErrorResponseData {
+  state: boolean;
+  message: string;
+}
+
 const SignUpFillInfo = () => {
   const signUp = useAppSelector(selectSignUp);
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [selectCounty, setSelectCounty] = useState("");
   const [selectCity, setSelectCity] = useState("");
   const [cities, setCities] = useState<string[]>([]);
@@ -129,7 +136,6 @@ const SignUpFillInfo = () => {
   } = useForm<IFormInputs>({ mode: "onTouched" });
 
   const onSubmit: SubmitHandler<IFormInputs> = (data) => {
-    console.log(data);
     if (
       selectCounty === "" ||
       selectCity === "" ||
@@ -144,6 +150,45 @@ const SignUpFillInfo = () => {
       });
       return;
     }
+
+    const filterItem = ZipCodes.filter(
+      (item) => item.county === selectCounty,
+    ).filter((item) => item.city === selectCity);
+
+    const postData = {
+      email: signUp.email,
+      password: signUp.password,
+      name: data.name,
+      phone: data.phone,
+      birthday: `${year}/${month}/${day}`,
+      address: {
+        zipcode: filterItem[0].zipcode,
+        detail: `${data.addressDetail}`,
+      },
+    };
+
+    setIsLoading(true);
+    apiUserSignUp(postData)
+      .then(() => {
+        MySwal.fire({
+          text: "註冊成功，請立即登入",
+          icon: "success",
+          showConfirmButton: false,
+        }).then(() => {
+          navigate("/login");
+        });
+      })
+      .catch((err) => {
+        MySwal.fire({
+          text: (err?.response?.data as IApiUserSignUpErrorResponseData)
+            ?.message,
+          icon: "error",
+          showConfirmButton: false,
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -369,7 +414,15 @@ const SignUpFillInfo = () => {
               type="submit"
               className="py-3 btn btn-primary btn-lg w-100 fw-bold text-white"
             >
-              完成註冊
+              {isLoading ? (
+                <span
+                  style={{ width: "1.5rem", height: "1.5rem" }}
+                  className="spinner-border spinner-border-sm"
+                  aria-hidden="true"
+                ></span>
+              ) : (
+                "完成註冊"
+              )}
             </button>
           </div>
         </form>
