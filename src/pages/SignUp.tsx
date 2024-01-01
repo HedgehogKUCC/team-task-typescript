@@ -10,6 +10,8 @@ import { apiVerifyEmail } from "../api";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
+const MySwal = withReactContent(Swal);
+
 interface IFormInputs {
   email: string;
   password: string;
@@ -48,7 +50,7 @@ const SignUp = () => {
           .isEmailExists;
 
         if (isEmailExists) {
-          withReactContent(Swal).fire({
+          MySwal.fire({
             text: "此電子信箱已被註冊",
             icon: "warning",
             showConfirmButton: false,
@@ -58,7 +60,7 @@ const SignUp = () => {
         }
       })
       .catch((err) => {
-        withReactContent(Swal).fire({
+        MySwal.fire({
           text:
             (err?.data as IApiVerifyEmailResponseData)?.message || "API Error",
           icon: "error",
