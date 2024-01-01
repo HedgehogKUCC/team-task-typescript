@@ -1,0 +1,29 @@
+import axios from "axios";
+
+const API_BASE_URL = "https://freyja-8dr3.onrender.com/api";
+
+const userRequest = axios.create({
+  baseURL: `${API_BASE_URL}/v1/user`,
+});
+
+const verifyRequest = axios.create({
+  baseURL: `${API_BASE_URL}/v1/verify`,
+});
+
+interface IApiUserSignUpData {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+  birthday: string;
+  address: {
+    zipcode: number;
+    detail: string;
+  };
+}
+
+export const apiUserSignUp = (data: IApiUserSignUpData) =>
+  userRequest.post("/signup", data);
+
+export const apiVerifyEmail = (data: { email: string }) =>
+  verifyRequest.post("/email", data);
