@@ -1,5 +1,13 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
+
+import { apiUserLogin } from "../api";
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 interface IFormInputs {
   email: string;
@@ -7,6 +15,10 @@ interface IFormInputs {
 }
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     formState: { errors },
@@ -14,7 +26,32 @@ const Login = () => {
   } = useForm<IFormInputs>({ mode: "onTouched" });
 
   const onSubmit: SubmitHandler<IFormInputs> = (data) => {
-    console.log(data);
+    const postData = {
+      email: data.email.trim(),
+      password: data.password,
+    };
+
+    setIsLoading(true);
+    apiUserLogin(postData)
+      .then(() => {
+        MySwal.fire({
+          text: "登入成功",
+          icon: "success",
+          showConfirmButton: false,
+        }).then(() => {
+          navigate("/");
+        });
+      })
+      .catch(() => {
+        MySwal.fire({
+          text: "電子信箱或密碼有誤",
+          icon: "error",
+          showConfirmButton: false,
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -94,7 +131,15 @@ const Login = () => {
               type="submit"
               className="py-3 btn btn-light btn-lg w-100 fw-bold"
             >
-              會員登入
+              {isLoading ? (
+                <span
+                  style={{ width: "1.5rem", height: "1.5rem" }}
+                  className="spinner-border spinner-border-sm"
+                  aria-hidden="true"
+                ></span>
+              ) : (
+                "會員登入"
+              )}
             </button>
           </div>
         </form>
