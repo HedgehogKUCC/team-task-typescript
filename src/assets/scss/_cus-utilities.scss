@@ -9,3 +9,11 @@
 .border_neutral_60 {
   border: solid 1px $gray-600;
 }
+
+.border-primary-white {
+  border-image: linear-gradient(to right, $primary, $white) 1;
+}
+
+.w-65 {
+  width: 65%;
+}
