@@ -1,12 +1,26 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 
+import { useAppSelector } from "../store/hook";
+import { selectUser } from "../store/slices/userSlice";
+
+import ProfileIcon from "/ic_Profile.svg";
+
 type NavbarProps = {
   isEscapeDocumentFlow?: boolean;
   isShowMenu?: boolean;
 };
 
-const Navbar = ({ isEscapeDocumentFlow = true, isShowMenu = true }: NavbarProps) => {
+const Navbar = ({
+  isEscapeDocumentFlow = true,
+  isShowMenu = true,
+}: NavbarProps) => {
+  const user = useAppSelector(selectUser);
+  const UserName =
+    user.name || localStorage.getItem("enjoyment_luxury_hotel_name");
+  const UserToken =
+    user.token || localStorage.getItem("enjoyment_luxury_hotel_token");
+
   const desktopNavRef = useRef<HTMLElement>(null);
   const mobileNavRef = useRef<HTMLElement>(null);
 
@@ -56,7 +70,22 @@ const Navbar = ({ isEscapeDocumentFlow = true, isShowMenu = true }: NavbarProps)
                 <Link className="p-3 text-decoration-none text-white fw-bold" to='/room'>客房旅宿</Link>
               </li>
               <li className="me-3 d-flex">
-                <Link className="p-3 text-decoration-none text-white fw-bold" to="/login">會員登入</Link>
+                {UserToken ? (
+                  <Link
+                    className="p-3 text-decoration-none text-white fw-bold"
+                    to="/member"
+                  >
+                    <img className="me-2" src={ProfileIcon} alt="" />
+                    {UserName}
+                  </Link>
+                ) : (
+                  <Link
+                    className="p-3 text-decoration-none text-white fw-bold"
+                    to="/login"
+                  >
+                    會員登入
+                  </Link>
+                )}
               </li>
               <li className="d-flex">
                 <a className="px-6 py-3 btn btn-primary text-white fw-bold" href="#">立即訂房</a>
@@ -71,7 +100,21 @@ const Navbar = ({ isEscapeDocumentFlow = true, isShowMenu = true }: NavbarProps)
             <Link className="p-3 w-100 d-flex justify-content-center align-items-center text-decoration-none text-white fw-bold" to="/room">客房旅宿</Link>
           </li>
           <li className="mb-3 w-100 d-flex justify-content-center align-items-center">
-            <Link className="p-3 w-100 d-flex justify-content-center align-items-center text-decoration-none text-white fw-bold" to="/login">會員登入</Link>
+            {UserToken ? (
+              <Link
+                className="p-3 w-100 d-flex justify-content-center align-items-center text-decoration-none text-white fw-bold"
+                to="/member"
+              >
+                我的帳戶
+              </Link>
+            ) : (
+              <Link
+                className="p-3 w-100 d-flex justify-content-center align-items-center text-decoration-none text-white fw-bold"
+                to="/login"
+              >
+                會員登入
+              </Link>
+            )}
           </li>
           <li className="w-100 d-flex justify-content-center align-items-center">
             <a className="px-6 py-3 w-100 d-flex justify-content-center align-items-center btn btn-primary text-white fw-bold" href="#">立即訂房</a>

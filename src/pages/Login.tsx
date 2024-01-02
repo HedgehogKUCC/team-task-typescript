@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 
+import { useAppDispatch } from "../store/hook";
+import { setName, setToken } from "../store/slices/userSlice";
+
 import { apiUserLogin } from "../api";
 
 import Swal from "sweetalert2";
@@ -14,7 +17,29 @@ interface IFormInputs {
   password: string;
 }
 
+interface IApiUserLoginResponseData {
+  status: boolean;
+  token: string;
+  result: {
+    address: {
+      zipcode: number;
+      detail: string;
+      county: string;
+      city: string;
+    };
+    id: string;
+    _id: string;
+    name: string;
+    email: string;
+    phone: string;
+    birthday: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
 const Login = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +58,16 @@ const Login = () => {
 
     setIsLoading(true);
     apiUserLogin(postData)
-      .then(() => {
+      .then((res) => {
+        const tempData = res.data as IApiUserLoginResponseData;
+        dispatch(setName(tempData.result.name));
+        dispatch(setToken(tempData.token));
+        localStorage.setItem(
+          "enjoyment_luxury_hotel_name",
+          tempData.result.name,
+        );
+        localStorage.setItem("enjoyment_luxury_hotel_token", tempData.token);
+
         MySwal.fire({
           text: "登入成功",
           icon: "success",
