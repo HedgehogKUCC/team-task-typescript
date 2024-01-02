@@ -24,6 +24,8 @@ interface IApiUserSignUpData {
 
 export const apiUserSignUp = (data: IApiUserSignUpData) =>
   userRequest.post("/signup", data);
+export const apiUserLogin = (data: { email: string; password: string }) =>
+  userRequest.post("/login", data);
 
 export const apiVerifyEmail = (data: { email: string }) =>
   verifyRequest.post("/email", data);
