@@ -39,8 +39,8 @@ const Home = () => {
           {
             carouselList.map((item, index) => {
               return (<div key={item.id} className={`carousel-item ${index === activeIndex ? 'active' : ''}`}>
-                <picture className="carousel-picture">
-                  <img src={item.img} className="carousel-img" alt={`Slide ${index + 1}`} />
+                <picture className="carousel_picture">
+                  <img src={item.img} className="carousel_img" alt={`Slide ${index + 1}`} />
                 </picture>
               </div>);
             })

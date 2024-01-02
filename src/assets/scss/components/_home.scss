@@ -6,12 +6,12 @@
 
 
 // 輪播區塊
-.carousel-picture {
+.carousel_picture {
   display: block;
   height: 95vh;
 }
 
-.carousel-img {
+.carousel_img {
   display: block;
   width: 100%;
   height: 100%;
@@ -118,7 +118,7 @@
 }
 
 @media screen and (max-width: 768px) {
-  .carousel-picture {
+  .carousel_picture {
     height: 100vh;
   }
 
