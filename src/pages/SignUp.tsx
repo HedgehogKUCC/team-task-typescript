@@ -40,11 +40,11 @@ const SignUp = () => {
   } = useForm<IFormInputs>({ mode: "onTouched" });
 
   const onSubmit: SubmitHandler<IFormInputs> = (data) => {
-    dispatch(setEmail(data.email));
+    dispatch(setEmail(data.email.trim()));
     dispatch(setPassword(data.password));
 
     setIsLoading(true);
-    apiVerifyEmail({ email: data.email })
+    apiVerifyEmail({ email: data.email.trim() })
       .then((res) => {
         const isEmailExists = (res.data as IApiVerifyEmailResponseData).result
           .isEmailExists;
