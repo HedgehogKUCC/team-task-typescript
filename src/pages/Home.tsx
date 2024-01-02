@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import HeroButton from "../components/HeroButton";
 import '../assets/scss/components/_home.scss';
 
 const Home = () => {
@@ -55,7 +56,7 @@ const Home = () => {
               <div className="carousel_content">
                 <h2 className="carousel_title">高雄<br />豪華住宿之選</h2>
                 <h3 className='carousel_subtitle'>我們致力於為您提供無與倫比的奢華體驗與優質服務</h3>
-                <button type="button" className="py-3 btn btn-light btn-lg w-100 fw-bold">立即訂房</button>
+                <HeroButton text="立即訂房" />
               </div>
             </div>
           </div>

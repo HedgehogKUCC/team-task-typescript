@@ -1,9 +1,60 @@
-.btn.btn-light {
-  color: $gray-600;
+.btn {
+  &.btn-light {
+    color: $gray-600;
 
-  &:hover {
-    color: $white;
-    background: $primary;
-    border-color: $primary;
+    &:hover {
+      color: $white;
+      background: $primary;
+      border-color: $primary;
+    }
+
+    &.hero_button {
+      color: $black;
+      font-size: 24px;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      grid-gap: 16px;
+
+      &::after {
+        content: '';
+        display: block;
+        width: 150px;
+        height: 1px;
+        background-color: $black;
+        transition-duration: 0.15s;
+      }
+
+      &:hover {
+        color: $white;
+
+        &::after {
+          width: 120px;
+          background-color: $white;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .btn {
+    &.btn-light {
+      &.hero_button {
+        font-size: 16px;
+        letter-spacing: 0.02em;
+
+        &::after {
+          width: 80px;
+        }
+
+        &:hover {
+          &::after {
+            width: 60px;
+          }
+        }
+      }
+    }
   }
 }
