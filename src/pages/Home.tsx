@@ -2,7 +2,7 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import HeroButton from "../components/HeroButton";
-import "../assets/scss/components/_home.scss";
+import styles from "../assets/scss/modules/home.module.scss";
 
 const Home = () => {
   // 輪播資料
@@ -64,10 +64,10 @@ const Home = () => {
                   index === activeIndex ? "active" : ""
                 }`}
               >
-                <picture className="carousel_picture">
+                <picture className={styles.carousel_picture}>
                   <img
                     src={item.img}
-                    className="carousel_img"
+                    className={styles.carousel_img}
                     alt={`Slide ${index + 1}`}
                   />
                 </picture>
@@ -75,20 +75,20 @@ const Home = () => {
             );
           })}
         </div>
-        <div className="carousel_content_wrap">
-          <div className="container carousel_container">
-            <h1 className="carousel_name">
+        <div className={styles.carousel_content_wrap}>
+          <div className={`container ${styles.carousel_container}`}>
+            <h1 className={styles.carousel_name}>
               享樂酒店
               <span>Enjoyment Luxury Hotel</span>
             </h1>
-            <div className="carousel_content_block">
-              <div className="carousel_content">
-                <h2 className="carousel_title">
+            <div className={styles.carousel_content_block}>
+              <div className={styles.carousel_content}>
+                <h2 className={styles.carousel_title}>
                   高雄
                   <br />
                   豪華住宿之選
                 </h2>
-                <h3 className="carousel_subtitle">
+                <h3 className={styles.carousel_subtitle}>
                   我們致力於為您提供無與倫比的奢華體驗與優質服務
                 </h3>
                 <HeroButton text="立即訂房" />
