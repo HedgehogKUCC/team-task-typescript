@@ -42,3 +42,29 @@
     transform: rotate(-45deg) translate(-8px, 8px);
   }
 }
+
+.user_area {
+  cursor: pointer;
+
+  > ul {
+    display: none;
+  }
+
+  &:hover {
+    > ul {
+      display: block;
+    }
+
+    a {
+      color: $gray-800;
+    }
+
+    li:hover {
+      background: $primary-200;
+
+      a {
+        color: $primary;
+      }
+    }
+  }
+}
