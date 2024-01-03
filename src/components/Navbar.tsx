@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 
-import { useAppSelector } from "../store/hook";
-import { selectUser } from "../store/slices/userSlice";
+import { useAppSelector, useAppDispatch } from "../store/hook";
+import { selectUser, setName, setToken } from "../store/slices/userSlice";
 
 import ProfileIcon from "/ic_Profile.svg";
 import styles from "../assets/scss/modules/navbar.module.scss";
@@ -16,7 +16,9 @@ const Navbar = ({
   isEscapeDocumentFlow = true,
   isShowMenu = true,
 }: NavbarProps) => {
+  const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
+
   const UserName =
     user.name || localStorage.getItem("enjoyment_luxury_hotel_name");
   const UserToken =
@@ -53,6 +55,14 @@ const Navbar = ({
     }
   };
 
+  const onClickLogoutHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    localStorage.removeItem("enjoyment_luxury_hotel_token");
+    localStorage.removeItem("enjoyment_luxury_hotel_name");
+    dispatch(setName(""));
+    dispatch(setToken(""));
+  };
+
   return (
     <>
       <nav
@@ -61,11 +71,7 @@ const Navbar = ({
         }`}
         ref={desktopNavRef}
       >
-        <div
-          className="container"
-          data-name={user.name}
-          data-token={user.token}
-        >
+        <div className="container">
           <div className="d-flex justify-content-between align-items-center">
             <Link className="me-0 py-0 d-inline-block" to="/">
               <img
@@ -94,13 +100,48 @@ const Navbar = ({
               </li>
               <li className="me-3 d-flex">
                 {UserToken ? (
-                  <Link
-                    className="p-3 d-flex text-decoration-none text-white fw-bold"
-                    to="/member"
-                  >
+                  <div className={`p-3 position-relative ${styles.user_area}`}>
                     <img className="me-2" src={ProfileIcon} alt="" />
                     {UserName}
-                  </Link>
+                    <ul
+                      style={{
+                        width: "260px",
+                        borderRadius: "20px",
+                        paddingTop: "12px",
+                        paddingBottom: "12px",
+                        top: "55px",
+                      }}
+                      className="position-absolute end-0 list-unstyled bg-white"
+                    >
+                      <li
+                        style={{
+                          borderTopLeftRadius: "5px",
+                          borderTopRightRadius: "5px",
+                        }}
+                      >
+                        <Link
+                          className="p-3 d-flex text-decoration-none fw-bold"
+                          to="/member"
+                        >
+                          我的帳戶
+                        </Link>
+                      </li>
+                      <li
+                        style={{
+                          borderBottomLeftRadius: "5px",
+                          borderBottomRightRadius: "5px",
+                        }}
+                      >
+                        <a
+                          className="p-3 d-flex text-decoration-none fw-bold"
+                          href="#"
+                          onClick={onClickLogoutHandler}
+                        >
+                          登出
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 ) : (
                   <Link
                     className="p-3 text-decoration-none text-white fw-bold"
@@ -153,7 +194,7 @@ const Navbar = ({
               </Link>
             )}
           </li>
-          <li className="w-100 d-flex justify-content-center align-items-center">
+          <li className="mb-3 w-100 d-flex justify-content-center align-items-center">
             <a
               className="px-6 py-3 w-100 d-flex justify-content-center align-items-center btn btn-primary text-white fw-bold"
               href="#"
@@ -161,6 +202,17 @@ const Navbar = ({
               立即訂房
             </a>
           </li>
+          {UserToken && (
+            <li className="w-100 d-flex justify-content-center align-items-center">
+              <a
+                className="p-3 w-100 d-flex justify-content-center align-items-center text-decoration-none text-white fw-bold"
+                href="#"
+                onClick={onClickLogoutHandler}
+              >
+                登出
+              </a>
+            </li>
+          )}
         </ul>
         <div className={styles.x_icon} onClick={xIconClickHandler}></div>
       </nav>
