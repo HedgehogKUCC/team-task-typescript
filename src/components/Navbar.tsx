@@ -97,7 +97,7 @@ const Navbar = ({
               <li className="me-3 d-flex">
                 {UserToken ? (
                   <Link
-                    className="p-3 text-decoration-none text-white fw-bold"
+                    className="p-3 d-flex text-decoration-none text-white fw-bold"
                     to="/member"
                   >
                     <img className="me-2" src={ProfileIcon} alt="" />
