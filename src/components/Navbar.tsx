@@ -5,6 +5,7 @@ import { useAppSelector } from "../store/hook";
 import { selectUser } from "../store/slices/userSlice";
 
 import ProfileIcon from "/ic_Profile.svg";
+import styles from "../assets/scss/modules/navbar.module.scss";
 
 type NavbarProps = {
   isEscapeDocumentFlow?: boolean;
@@ -73,13 +74,10 @@ const Navbar = ({
                 alt=""
               />
             </Link>
-            <div
-              className="bar_icon d-block d-md-none"
-              onClick={barIconClickHandler}
-            >
-              <div className="bar_icon_line_1"></div>
-              <div className="bar_icon_line_2"></div>
-              <div className="bar_icon_line_3"></div>
+            <div className="d-block d-md-none" onClick={barIconClickHandler}>
+              <div className={styles.bar_icon_line_1}></div>
+              <div className={styles.bar_icon_line_2}></div>
+              <div className={styles.bar_icon_line_3}></div>
             </div>
             <ul
               className={`mb-0 list-unstyled d-none justify-content-center align-items-center ${
@@ -164,7 +162,7 @@ const Navbar = ({
             </a>
           </li>
         </ul>
-        <div className="x_icon" onClick={xIconClickHandler}></div>
+        <div className={styles.x_icon} onClick={xIconClickHandler}></div>
       </nav>
     </>
   );

@@ -1,18 +1,4 @@
-@import "bootstrap/scss/functions";
+@import "index";
 
-// Include any default variable overrides here
-@import "./override-variables";
-
-@import "./variables";
-@import "./variables-dark";
-
-// Include any default map overrides here
-
-@import "bootstrap/scss/bootstrap";
-
-@import "cus-reboot";
-@import "cus-utilities";
-
-@import "components/navbar";
 @import "components/buttons";
 @import "components/login-signup";
