@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -43,14 +43,24 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isRememberAccount, setIsRememberAccount] = useState(false);
+
+  const localStorageEmail =
+    localStorage.getItem("enjoyment_luxury_hotel_email") || "";
 
   const {
     register,
     formState: { errors },
     handleSubmit,
+    getValues,
+    setValue,
   } = useForm<IFormInputs>({ mode: "onTouched" });
 
   const onSubmit: SubmitHandler<IFormInputs> = (data) => {
+    if (isRememberAccount) {
+      localStorage.setItem("enjoyment_luxury_hotel_email", data.email.trim());
+    }
+
     const postData = {
       email: data.email.trim(),
       password: data.password,
@@ -62,6 +72,7 @@ const Login = () => {
         const tempData = res.data as IApiUserLoginResponseData;
         dispatch(setName(tempData.result.name));
         dispatch(setToken(tempData.token));
+
         localStorage.setItem(
           "enjoyment_luxury_hotel_name",
           tempData.result.name,
@@ -87,6 +98,27 @@ const Login = () => {
         setIsLoading(false);
       });
   };
+
+  useEffect(() => {
+    if (localStorageEmail) {
+      setValue("email", localStorageEmail);
+      setIsRememberAccount(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    const tempEmail = getValues("email").trim();
+
+    if (!localStorageEmail) {
+      if (isRememberAccount && tempEmail) {
+        localStorage.setItem("enjoyment_luxury_hotel_email", tempEmail);
+      }
+    } else {
+      if (!isRememberAccount) {
+        localStorage.removeItem("enjoyment_luxury_hotel_email");
+      }
+    }
+  }, [isRememberAccount]);
 
   return (
     <div className="mx-auto pt-xxl-10 login_signUp_form_wrap">
@@ -150,6 +182,8 @@ const Login = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="rememberAccount"
+                  checked={isRememberAccount}
+                  onChange={(e) => setIsRememberAccount(e.target.checked)}
                 />
                 <label className="form-check-label" htmlFor="rememberAccount">
                   記住帳號
