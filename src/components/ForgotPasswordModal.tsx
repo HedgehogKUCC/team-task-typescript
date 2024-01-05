@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
-import { apiVerifyGenerateEmailCode } from "../api";
+import { apiVerifyGenerateEmailCode, apiUserForgotPassword } from "../api";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -10,6 +10,7 @@ const MySwal = withReactContent(Swal);
 
 interface IForgotPasswordModalProps {
   modalRef: React.RefObject<HTMLDivElement>;
+  hideModal: () => void;
 }
 
 interface IFormInputs {
@@ -18,7 +19,10 @@ interface IFormInputs {
   newPassword: string;
 }
 
-const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
+const ForgotPasswordModal = ({
+  modalRef,
+  hideModal,
+}: IForgotPasswordModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isShowNextForm, setIsShowNextForm] = useState(false);
   const [readonlyEmail, setReadonlyEmail] = useState("");
@@ -27,6 +31,7 @@ const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
     register,
     formState: { errors },
     handleSubmit,
+    getValues,
   } = useForm<IFormInputs>({ mode: "onTouched" });
 
   const onSubmitEmailUserReceiveCode: SubmitHandler<IFormInputs> = (data) => {
@@ -50,7 +55,35 @@ const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
   };
 
   const onSubmitNewPassword: SubmitHandler<IFormInputs> = (data) => {
-    console.log("onSubmitNewPassword", data);
+    const email = getValues("email");
+    const postData = {
+      email,
+      code: data.code.trim(),
+      newPassword: data.newPassword.trim(),
+    };
+
+    setIsLoading(true);
+    apiUserForgotPassword(postData)
+      .then(() => {
+        MySwal.fire({
+          text: "密碼已重設，請重新登入",
+          icon: "success",
+          showConfirmButton: false,
+        }).then(() => {
+          hideModal();
+        });
+      })
+      .catch((err) => {
+        MySwal.fire({
+          text: (err.response.data as { status: boolean; message: string })
+            .message,
+          icon: "error",
+          showConfirmButton: false,
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -112,77 +145,86 @@ const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
                 </button>
               </div>
             </form>
-            <form
-              className={`${isShowNextForm ? "d-block" : "d-none"}`}
-              onSubmit={handleSubmit(onSubmitNewPassword)}
-            >
-              <div className="mb-3">
-                <label className="form-label text_primary_60">電子信箱</label>
-                <input
-                  type="email"
-                  className="form-control border border-primary"
-                  value={readonlyEmail}
-                  disabled
-                  readOnly
-                />
-              </div>
-              <div className="mb-3">
-                <label className="form-label text_primary_60">驗證碼</label>
-                <input
-                  type="text"
-                  className={`form-control border ${
-                    errors.code ? "border-danger" : "border-primary"
-                  } ${errors.code && "is-invalid border-3"}`}
-                  placeholder="請輸入驗證碼"
-                  {...register("code", {
-                    required: {
-                      value: true,
-                      message: "驗證碼 必填",
-                    },
-                    pattern: {
-                      value: /^[a-zA-Z0-9]{6}$/g,
-                      message: "驗證碼 格式有誤",
-                    },
-                  })}
-                />
-                {errors.code && (
-                  <div className="invalid-feedback">{errors.code.message}</div>
-                )}
-              </div>
-              <div className="mb-3">
-                <label className="form-label text_primary_60">新密碼</label>
-                <input
-                  type="password"
-                  className={`form-control border ${
-                    errors.newPassword ? "border-danger" : "border-primary"
-                  } ${errors.newPassword && "is-invalid border-3"}`}
-                  autoComplete="current-password"
-                  {...register("newPassword", {
-                    required: {
-                      value: true,
-                      message: "新密碼 必填",
-                    },
-                    pattern: {
-                      value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/g,
-                      message: "新密碼需至少 8 碼以上，並英數混合",
-                    },
-                  })}
-                />
-                {errors.newPassword && (
-                  <div className="invalid-feedback">
-                    {errors.newPassword.message}
-                  </div>
-                )}
-              </div>
-              <div>
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-lg w-100 fw-bold text-white"
-                >
-                  確認新密碼
-                </button>
-              </div>
-            </form>
+            {isShowNextForm && (
+              <form onSubmit={handleSubmit(onSubmitNewPassword)}>
+                <div className="mb-3">
+                  <label className="form-label text_primary_60">電子信箱</label>
+                  <input
+                    type="email"
+                    className="form-control border border-primary"
+                    value={readonlyEmail}
+                    disabled
+                    readOnly
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label text_primary_60">驗證碼</label>
+                  <input
+                    type="text"
+                    className={`form-control border ${
+                      errors.code ? "border-danger" : "border-primary"
+                    } ${errors.code && "is-invalid border-3"}`}
+                    placeholder="請輸入驗證碼"
+                    {...register("code", {
+                      required: {
+                        value: true,
+                        message: "驗證碼 必填",
+                      },
+                      pattern: {
+                        value: /^[a-zA-Z0-9]{6}$/g,
+                        message: "驗證碼 格式有誤",
+                      },
+                    })}
+                  />
+                  {errors.code && (
+                    <div className="invalid-feedback">
+                      {errors.code.message}
+                    </div>
+                  )}
+                </div>
+                <div className="mb-3">
+                  <label className="form-label text_primary_60">新密碼</label>
+                  <input
+                    type="password"
+                    className={`form-control border ${
+                      errors.newPassword ? "border-danger" : "border-primary"
+                    } ${errors.newPassword && "is-invalid border-3"}`}
+                    autoComplete="current-password"
+                    {...register("newPassword", {
+                      required: {
+                        value: true,
+                        message: "新密碼 必填",
+                      },
+                      pattern: {
+                        value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/g,
+                        message: "新密碼需至少 8 碼以上，並英數混合",
+                      },
+                    })}
+                  />
+                  {errors.newPassword && (
+                    <div className="invalid-feedback">
+                      {errors.newPassword.message}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-lg w-100 fw-bold text-white"
+                  >
+                    {isLoading ? (
+                      <span
+                        style={{ width: "1.5rem", height: "1.5rem" }}
+                        className="spinner-border spinner-border-sm"
+                        aria-hidden="true"
+                      ></span>
+                    ) : (
+                      "確認新密碼"
+                    )}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </div>

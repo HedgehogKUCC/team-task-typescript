@@ -110,6 +110,10 @@ const Login = () => {
     forgotPasswordModal!.show();
   };
 
+  const hideModal = () => {
+    forgotPasswordModal!.hide();
+  };
+
   useEffect(() => {
     forgotPasswordModal = new Modal(modalRef.current!);
 
@@ -135,7 +139,7 @@ const Login = () => {
 
   return (
     <>
-      <ForgotPasswordModal modalRef={modalRef} />
+      <ForgotPasswordModal modalRef={modalRef} hideModal={hideModal} />
       <div className="mx-auto pt-xxl-10 login_signUp_form_wrap">
         <div className="d-flex flex-column">
           <p className="mb-2 text-primary">享樂酒店，誠摯歡迎</p>
