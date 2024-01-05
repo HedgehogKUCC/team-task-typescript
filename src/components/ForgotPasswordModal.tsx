@@ -1,4 +1,12 @@
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+
+import { apiVerifyGenerateEmailCode } from "../api";
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 interface IForgotPasswordModalProps {
   modalRef: React.RefObject<HTMLDivElement>;
@@ -11,6 +19,8 @@ interface IFormInputs {
 }
 
 const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     formState: { errors },
@@ -18,7 +28,22 @@ const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
   } = useForm<IFormInputs>({ mode: "onTouched" });
 
   const onSubmitEmailUserReceiveCode: SubmitHandler<IFormInputs> = (data) => {
-    console.log(data);
+    setIsLoading(true);
+    apiVerifyGenerateEmailCode({ email: data.email.trim() })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        MySwal.fire({
+          text: (err.response.data as { status: boolean; message: string })
+            .message,
+          icon: "error",
+          showConfirmButton: false,
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -65,7 +90,15 @@ const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
                   type="submit"
                   className="btn btn-primary btn-lg w-100 fw-bold text-white"
                 >
-                  發送驗證碼
+                  {isLoading ? (
+                    <span
+                      style={{ width: "1.5rem", height: "1.5rem" }}
+                      className="spinner-border spinner-border-sm"
+                      aria-hidden="true"
+                    ></span>
+                  ) : (
+                    "發送驗證碼"
+                  )}
                 </button>
               </div>
             </form>
