@@ -27,11 +27,12 @@ $h5-font-size: $font-size-base * 1.5;
 $h6-font-size: $font-size-base * 1.25;
 
 $primary-100: #faf7f5;
+
 $primary-150: #f7f2ee;
 $primary-200: #f1eae4;
 $primary-300: #e1d1c2;
 $primary-400: #ae9984;
-// $primary: #bf9d7d;
+$primary: #bf9d7d;
 $primary-600: #7b6651;
 
 $green-100: #e8fee7;
@@ -104,6 +105,8 @@ $input-btn-border-width: 0;
 
 $form-check-input-width: 1.5em;
 $form-check-min-height: 1.5em;
+
+$enable-negative-margins: true !default;
 
 $spacer: 1rem;
 $spacers: (
