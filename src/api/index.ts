@@ -29,3 +29,5 @@ export const apiUserLogin = (data: { email: string; password: string }) =>
 
 export const apiVerifyEmail = (data: { email: string }) =>
   verifyRequest.post("/email", data);
+export const apiVerifyGenerateEmailCode = (data: { email: string }) =>
+  verifyRequest.post("/generateEmailCode", data);
