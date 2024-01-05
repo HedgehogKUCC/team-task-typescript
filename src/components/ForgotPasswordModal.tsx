@@ -20,6 +20,8 @@ interface IFormInputs {
 
 const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isShowNextForm, setIsShowNextForm] = useState(false);
+  const [readonlyEmail, setReadonlyEmail] = useState("");
 
   const {
     register,
@@ -30,8 +32,9 @@ const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
   const onSubmitEmailUserReceiveCode: SubmitHandler<IFormInputs> = (data) => {
     setIsLoading(true);
     apiVerifyGenerateEmailCode({ email: data.email.trim() })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+        setIsShowNextForm(true);
+        setReadonlyEmail(data.email.trim());
       })
       .catch((err) => {
         MySwal.fire({
@@ -44,6 +47,10 @@ const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
       .finally(() => {
         setIsLoading(false);
       });
+  };
+
+  const onSubmitNewPassword: SubmitHandler<IFormInputs> = (data) => {
+    console.log("onSubmitNewPassword", data);
   };
 
   return (
@@ -59,7 +66,10 @@ const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
             ></button>
           </div>
           <div className="pt-0 modal-body">
-            <form onSubmit={handleSubmit(onSubmitEmailUserReceiveCode)}>
+            <form
+              className={`${isShowNextForm ? "d-none" : "d-block"}`}
+              onSubmit={handleSubmit(onSubmitEmailUserReceiveCode)}
+            >
               <div className="mb-3">
                 <label className="form-label text_primary_60">電子信箱</label>
                 <input
@@ -99,6 +109,77 @@ const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
                   ) : (
                     "發送驗證碼"
                   )}
+                </button>
+              </div>
+            </form>
+            <form
+              className={`${isShowNextForm ? "d-block" : "d-none"}`}
+              onSubmit={handleSubmit(onSubmitNewPassword)}
+            >
+              <div className="mb-3">
+                <label className="form-label text_primary_60">電子信箱</label>
+                <input
+                  type="email"
+                  className="form-control border border-primary"
+                  value={readonlyEmail}
+                  disabled
+                  readOnly
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label text_primary_60">驗證碼</label>
+                <input
+                  type="text"
+                  className={`form-control border ${
+                    errors.code ? "border-danger" : "border-primary"
+                  } ${errors.code && "is-invalid border-3"}`}
+                  placeholder="請輸入驗證碼"
+                  {...register("code", {
+                    required: {
+                      value: true,
+                      message: "驗證碼 必填",
+                    },
+                    pattern: {
+                      value: /^[a-zA-Z0-9]{6}$/g,
+                      message: "驗證碼 格式有誤",
+                    },
+                  })}
+                />
+                {errors.code && (
+                  <div className="invalid-feedback">{errors.code.message}</div>
+                )}
+              </div>
+              <div className="mb-3">
+                <label className="form-label text_primary_60">新密碼</label>
+                <input
+                  type="password"
+                  className={`form-control border ${
+                    errors.newPassword ? "border-danger" : "border-primary"
+                  } ${errors.newPassword && "is-invalid border-3"}`}
+                  autoComplete="current-password"
+                  {...register("newPassword", {
+                    required: {
+                      value: true,
+                      message: "新密碼 必填",
+                    },
+                    pattern: {
+                      value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/g,
+                      message: "新密碼需至少 8 碼以上，並英數混合",
+                    },
+                  })}
+                />
+                {errors.newPassword && (
+                  <div className="invalid-feedback">
+                    {errors.newPassword.message}
+                  </div>
+                )}
+              </div>
+              <div>
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-lg w-100 fw-bold text-white"
+                >
+                  確認新密碼
                 </button>
               </div>
             </form>
