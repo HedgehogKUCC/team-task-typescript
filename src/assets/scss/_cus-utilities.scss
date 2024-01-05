@@ -1,3 +1,14 @@
+.wider_container {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  width: 100%;
+  max-width: 1760px;
+  padding-right: calc(var(--bs-gutter-x) * 0.5);
+  padding-left: calc(var(--bs-gutter-x) * 0.5);
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .text_neutral_60 {
   color: $gray-600;
 }
@@ -16,4 +27,21 @@
 
 .border_neutral_60 {
   border: solid 1px $gray-600;
+}
+
+.bg_primary_10 {
+  background-color: $primary-150;
+}
+
+.border_primary_white {
+  border-image: linear-gradient(to right, $primary, $white) 1;
+}
+
+.bg_opacity_60 {
+  opacity: 0.6;
+}
+
+.square_97 {
+  width: 97px;
+  height: 97px;
 }
