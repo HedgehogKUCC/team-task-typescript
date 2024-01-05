@@ -1,4 +1,18 @@
-$font-family-sans-serif:      "Noto Serif TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+$font-family-sans-serif:
+  "Noto Serif TC",
+  system-ui,
+  -apple-system,
+  "Segoe UI",
+  Roboto,
+  "Helvetica Neue",
+  "Noto Sans",
+  "Liberation Sans",
+  Arial,
+  sans-serif,
+  "Apple Color Emoji",
+  "Segoe UI Emoji",
+  "Segoe UI Symbol",
+  "Noto Color Emoji";
 
 $font-weight-medium: 500;
 $font-weight-base: $font-weight-medium;
@@ -12,39 +26,75 @@ $h4-font-size: $font-size-base * 1.75;
 $h5-font-size: $font-size-base * 1.5;
 $h6-font-size: $font-size-base * 1.25;
 
-$primary-100: #FAF7F5;
-$primary-200: #F1EAE4;
-$primary-300: #E1D1C2;
-$primary-400: #AE9984;
-$primary: #BF9D7D;
-$primary-600: #7B6651;
+$primary-100: #faf7f5;
+$primary-150: #f7f2ee;
+$primary-200: #f1eae4;
+$primary-300: #e1d1c2;
+$primary-400: #ae9984;
+// $primary: #bf9d7d;
+$primary-600: #7b6651;
 
-$green-100: #E8FEE7;
-$green-200: #BCFBBD;
-$green: #52DD7E;
-$green-600: #299F65;
+$green-100: #e8fee7;
+$green-200: #bcfbbd;
+$green: #52dd7e;
+$green-600: #299f65;
 
-$cyan-100: #E6FBFE;
-$cyan-200: #B1EFFD;
-$cyan: #3BADEF;
-$cyan-600: #1D66AC;
+$cyan-100: #e6fbfe;
+$cyan-200: #b1effd;
+$cyan: #3badef;
+$cyan-600: #1d66ac;
 
-$red-100: #FDECEF;
-$red-200: #F5CCD1;
-$red: #DA3E51;
-$red-600: #C22538;
+$red-100: #fdecef;
+$red-200: #f5ccd1;
+$red: #da3e51;
+$red-600: #c22538;
 
-$gray-100: #F9F9F9;
-$gray-400: #ECECEC;
+$gray-100: #f9f9f9;
+$gray-400: #ececec;
 $gray-600: #909090;
-$gray-800: #4B4B4B;
-$gray-900: #140F0A;
+$gray-800: #4b4b4b;
+$gray-900: #140f0a;
+
+$blue: #0d6efd !default;
+$indigo: #6610f2 !default;
+$purple: #6f42c1 !default;
+$pink: #d63384 !default;
+$red: #dc3545 !default;
+$orange: #fd7e14 !default;
+$yellow: #ffc107 !default;
+$green: #198754 !default;
+$teal: #20c997 !default;
+$cyan: #0dcaf0 !default;
+
+$primary: #bf9d7d !default;
+$secondary: $gray-600 !default;
+$success: $green !default;
+$info: $cyan !default;
+$warning: $yellow !default;
+$danger: $red !default;
+$light: $gray-100 !default;
+$dark: $gray-900 !default;
+$gray-dark: $gray-800 !default;
+// scss-docs-end theme-color-variables
+
+// scss-docs-start theme-colors-map
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "danger": $danger,
+  "light": $light,
+  "dark": $dark,
+  "gray-dark": $gray-dark,
+) !default;
 
 $light: $gray-400;
 
 $nav-link-font-weight: 700;
 
-$border-radius: .5rem;
+$border-radius: 0.5rem;
 
 $input-placeholder-color: $gray-600;
 
@@ -58,8 +108,8 @@ $form-check-min-height: 1.5em;
 $spacer: 1rem;
 $spacers: (
   0: 0,
-  1: $spacer * .25,
-  2: $spacer * .5,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
   3: $spacer,
   4: $spacer * 1.25,
   5: $spacer * 1.5,
@@ -67,7 +117,9 @@ $spacers: (
   7: $spacer * 2.5,
   8: $spacer * 5,
   9: $spacer * 7.5,
-  10: $spacer * 10
+  10: $spacer * 10,
+  11: $spacer * 3,
+  12: $spacer * 4.5,
 ) !default;
 
 $container-max-widths: (
@@ -75,5 +127,5 @@ $container-max-widths: (
   md: 720px,
   lg: 960px,
   xl: 1140px,
-  xxl: 1760px
+  xxl: 1760px,
 );
