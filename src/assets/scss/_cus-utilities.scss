@@ -10,10 +10,19 @@
   border: solid 1px $gray-600;
 }
 
-.border-primary-white {
+.bg_primary_10 {
+  background-color: $primary-150;
+}
+
+.border_primary_white {
   border-image: linear-gradient(to right, $primary, $white) 1;
 }
 
-.w-65 {
-  width: 65%;
+.bg_opacity_60 {
+  opacity: 0.6;
+}
+
+.square_97 {
+  width: 97px;
+  height: 97px;
 }
