@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
-import { apiVerifyGenerateEmailCode } from "../api";
+import { apiVerifyGenerateEmailCode, apiUserForgotPassword } from "../api";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -10,6 +10,7 @@ const MySwal = withReactContent(Swal);
 
 interface IForgotPasswordModalProps {
   modalRef: React.RefObject<HTMLDivElement>;
+  hideModal: () => void;
 }
 
 interface IFormInputs {
@@ -18,7 +19,10 @@ interface IFormInputs {
   newPassword: string;
 }
 
-const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
+const ForgotPasswordModal = ({
+  modalRef,
+  hideModal,
+}: IForgotPasswordModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isShowNextForm, setIsShowNextForm] = useState(false);
   const [readonlyEmail, setReadonlyEmail] = useState("");
@@ -27,6 +31,7 @@ const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
     register,
     formState: { errors },
     handleSubmit,
+    getValues,
   } = useForm<IFormInputs>({ mode: "onTouched" });
 
   const onSubmitEmailUserReceiveCode: SubmitHandler<IFormInputs> = (data) => {
@@ -50,7 +55,35 @@ const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
   };
 
   const onSubmitNewPassword: SubmitHandler<IFormInputs> = (data) => {
-    console.log("onSubmitNewPassword", data);
+    const email = getValues("email");
+    const postData = {
+      email,
+      code: data.code.trim(),
+      newPassword: data.newPassword.trim(),
+    };
+
+    setIsLoading(true);
+    apiUserForgotPassword(postData)
+      .then(() => {
+        MySwal.fire({
+          text: "密碼已重設，請重新登入",
+          icon: "success",
+          showConfirmButton: false,
+        }).then(() => {
+          hideModal();
+        });
+      })
+      .catch((err) => {
+        MySwal.fire({
+          text: (err.response.data as { status: boolean; message: string })
+            .message,
+          icon: "error",
+          showConfirmButton: false,
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -179,7 +212,15 @@ const ForgotPasswordModal = ({ modalRef }: IForgotPasswordModalProps) => {
                     type="submit"
                     className="btn btn-primary btn-lg w-100 fw-bold text-white"
                   >
-                    確認新密碼
+                    {isLoading ? (
+                      <span
+                        style={{ width: "1.5rem", height: "1.5rem" }}
+                        className="spinner-border spinner-border-sm"
+                        aria-hidden="true"
+                      ></span>
+                    ) : (
+                      "確認新密碼"
+                    )}
                   </button>
                 </div>
               </form>
