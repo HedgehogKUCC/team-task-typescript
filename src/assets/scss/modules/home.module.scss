@@ -3,7 +3,7 @@
 // 輪播區塊
 .carousel_picture {
   display: block;
-  height: 95vh;
+  height: 100vh;
 }
 
 .carousel_img {
@@ -112,10 +112,6 @@
 }
 
 @media screen and (max-width: 768px) {
-  .carousel_picture {
-    height: 100vh;
-  }
-
   .carousel_container {
     flex-direction: column;
     justify-content: center;
