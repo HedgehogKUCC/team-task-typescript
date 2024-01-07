@@ -1,16 +1,23 @@
 type SectionTitleProps = {
   text: string;
+  color?: string;
+  decoPosition?: string;
 };
 
-const SectionTitle = ({ text }: SectionTitleProps) => {
+const SectionTitle = ({ text, color, decoPosition }: SectionTitleProps) => {
   return (
     <>
       <div
-        className="d-flex flex-column mb-7 mb-md-8"
-        style={{ maxWidth: "140px" }}
+        className={`d-flex mb-7 mb-md-8 ${
+          decoPosition === "bottom"
+            ? "flex-column"
+            : "flex-row align-items-center"
+        }`}
       >
         <h4
-          className="h1 text-primary fw-bold mb-5 mb-md-7"
+          className={`h1 fw-bold flex-shrink-0 ${
+            color === "#fff" ? "text-white" : "text-primary"
+          } ${decoPosition === "bottom" ? "mb-5 mb-md-7" : "mb-0 me-7"}`}
           style={{ whiteSpace: "pre-wrap" }}
         >
           {text}
@@ -19,7 +26,10 @@ const SectionTitle = ({ text }: SectionTitleProps) => {
           className="w-100"
           style={{
             height: "2px",
-            background: "linear-gradient(90deg, #BE9C7C, #fff)",
+            maxWidth: "140px",
+            background: `linear-gradient(90deg, ${
+              color === "#fff" ? "#fff" : "#BE9C7C"
+            } , #fff)`,
           }}
         ></span>
       </div>
