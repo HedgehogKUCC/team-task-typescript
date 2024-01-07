@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import HeroButton from "../components/HeroButton";
+import SectionTitle from "../components/SectionTitle";
 import styles from "../assets/scss/modules/home.module.scss";
+import { apiHomeNews } from "../api";
 
 const Home = () => {
   // 輪播資料
@@ -30,6 +32,26 @@ const Home = () => {
       img: "https://images.unsplash.com/photo-1582582484783-0a7a9e45b0d6?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3https://images.unsplash.com/photo-1582582484783-0a7a9e45b0d6?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
   ];
+
+  // 最新消息資料
+  interface INewsList {
+    _id: string;
+    title: string;
+    description: string;
+    image: string;
+    createdAt: string;
+    updatedAt: string;
+  }
+  const [newsList, setNewsList] = useState<INewsList[]>([]);
+
+  const getNewsList = async () => {
+    const res = await apiHomeNews();
+    setNewsList(res.data.result);
+  };
+
+  useEffect(() => {
+    getNewsList();
+  }, []);
 
   return (
     <>
@@ -76,7 +98,7 @@ const Home = () => {
           })}
         </div>
         <div className={styles.carousel_content_wrap}>
-          <div className={`container ${styles.carousel_container}`}>
+          <div className={`wider_container ${styles.carousel_container}`}>
             <h1 className={styles.carousel_name}>
               享樂酒店
               <span>Enjoyment Luxury Hotel</span>
@@ -97,6 +119,36 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      {/* 最新消息 */}
+      <section className="bg_primary_10 py-8 py-md-9">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-2 col-12">
+              <SectionTitle text={`最新\n消息`} />
+            </div>
+            <div className="col-md-10 col-12">
+              {newsList.map((item) => (
+                <div className="row mb-7 mb-md-5" key={item._id}>
+                  <div className="col-12 col-md-5 mb-5 mb-md-0">
+                    <img
+                      src={item.image}
+                      className="img-fluid rounded"
+                      alt={item.title}
+                    />
+                  </div>
+                  <div className="col-12 col-md-7 d-flex flex-column justify-content-center">
+                    <h5 className="h3 text-black fw-bold mb-2 mb-md-5">
+                      {item.title}
+                    </h5>
+                    <p className="text-gray-dark mb-0">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
       <Footer />
     </>
   );
