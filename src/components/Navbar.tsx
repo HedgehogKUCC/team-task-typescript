@@ -19,10 +19,21 @@ const Navbar = ({
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
 
-  const UserName =
-    user.name || localStorage.getItem("enjoyment_luxury_hotel_name");
-  const UserToken =
-    user.token || localStorage.getItem("enjoyment_luxury_hotel_token");
+  const localStorageName =
+    localStorage.getItem("enjoyment_luxury_hotel_name") || "";
+  const localStorageToken =
+    localStorage.getItem("enjoyment_luxury_hotel_token") || "";
+
+  const UserName = user.name || localStorageName;
+  const UserToken = user.token || localStorageToken;
+
+  if (!user.name && localStorageName) {
+    dispatch(setName(UserName));
+  }
+
+  if (!user.token && localStorageToken) {
+    dispatch(setToken(UserToken));
+  }
 
   const desktopNavRef = useRef<HTMLElement>(null);
   const mobileNavRef = useRef<HTMLElement>(null);
@@ -100,7 +111,9 @@ const Navbar = ({
               </li>
               <li className="me-3 d-flex">
                 {UserToken ? (
-                  <div className={`p-3 position-relative ${styles.user_area}`}>
+                  <div
+                    className={`p-3 position-relative d-flex ${styles.user_area}`}
+                  >
                     <img className="me-2" src={ProfileIcon} alt="" />
                     {UserName}
                     <ul
