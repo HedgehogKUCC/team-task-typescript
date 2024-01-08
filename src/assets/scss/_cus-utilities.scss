@@ -45,3 +45,13 @@
   width: 97px;
   height: 97px;
 }
+
+.fs-7 {
+  font-size: 1rem;
+}
+
+@media screen and (max-width: 576px) {
+  .fs-7 {
+    font-size: 0.875rem;
+  }
+}

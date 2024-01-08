@@ -216,3 +216,10 @@
     width: 85%;
   }
 }
+
+// 交通方式
+@media screen and (max-width: 576px) {
+  .traffic_img {
+    width: 48px;
+  }
+}
