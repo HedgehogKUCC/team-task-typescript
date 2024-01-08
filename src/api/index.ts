@@ -10,6 +10,10 @@ const verifyRequest = axios.create({
   baseURL: `${API_BASE_URL}/v1/verify`,
 });
 
+const homeRequest = axios.create({
+  baseURL: `${API_BASE_URL}/v1/home`,
+});
+
 interface IApiUserSignUpData {
   name: string;
   email: string;
@@ -36,3 +40,5 @@ export const apiVerifyEmail = (data: { email: string }) =>
   verifyRequest.post("/email", data);
 export const apiVerifyGenerateEmailCode = (data: { email: string }) =>
   verifyRequest.post("/generateEmailCode", data);
+
+export const apiHomeNews = () => homeRequest.get("/news");
