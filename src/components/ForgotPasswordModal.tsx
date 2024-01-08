@@ -65,12 +65,11 @@ const ForgotPasswordModal = ({
     setIsLoading(true);
     apiUserForgotPassword(postData)
       .then(() => {
+        hideModal();
         MySwal.fire({
           text: "密碼已重設，請重新登入",
           icon: "success",
           showConfirmButton: false,
-        }).then(() => {
-          hideModal();
         });
       })
       .catch((err) => {
