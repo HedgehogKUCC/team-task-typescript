@@ -175,3 +175,44 @@
     border-radius: 40px 40px 0 40px;
   }
 }
+
+// 佳餚美饌區塊
+.culinary_wrap {
+  display: flex;
+  flex-wrap: nowrap;
+  grid-gap: 24px;
+  overflow-x: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.culinary_card {
+  position: relative;
+  width: calc(100% / 3);
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.culinary_content {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(180deg, rgb(0 0 0 / 0%), rgb(20 15 10/ 100%));
+  backdrop-filter: blur(5px);
+  padding: 24px;
+}
+
+@media screen and (max-width: 992px) {
+  .culinary_card {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .culinary_card {
+    width: 85%;
+  }
+}

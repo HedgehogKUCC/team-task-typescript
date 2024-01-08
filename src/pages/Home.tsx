@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import HeroButton from "../components/HeroButton";
 import SectionTitle from "../components/SectionTitle";
 import styles from "../assets/scss/modules/home.module.scss";
-import { apiHomeNews } from "../api";
+import { apiHomeNews, apiHomeCulinary } from "../api";
 
 const Home = () => {
   // 輪播資料
@@ -51,6 +51,28 @@ const Home = () => {
 
   useEffect(() => {
     getNewsList();
+  }, []);
+
+  // 佳餚美饌資料
+  interface ICulinaryList {
+    _id: string;
+    title: string;
+    description: string;
+    diningTime: string;
+    image: string;
+    createdAt: string;
+    updatedAt: string;
+  }
+
+  const [culinaryList, setCulinaryList] = useState<ICulinaryList[]>([]);
+
+  const getHomeCulinary = async () => {
+    const res = await apiHomeCulinary();
+    setCulinaryList(res.data.result);
+  };
+
+  useEffect(() => {
+    getHomeCulinary();
   }, []);
 
   return (
@@ -151,7 +173,10 @@ const Home = () => {
       </section>
 
       {/* 關於我們 */}
-      <section className="bg-dark position-relative py-9" style={{ zIndex: 1 }}>
+      <section
+        className="bg-dark position-relative py-9 overflow-hidden"
+        style={{ zIndex: 1 }}
+      >
         <picture>
           <source
             srcSet="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E8%A1%8C%E5%8B%95%E7%89%88/about.png?raw=true"
@@ -189,6 +214,27 @@ const Home = () => {
                 </article>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 佳餚美饌 */}
+      <section className="bg_primary_10 py-8 py-md-9">
+        <div className="container">
+          <SectionTitle text={`佳餚\n美饌`} />
+          <div className={styles.culinary_wrap}>
+            {culinaryList.map((item) => (
+              <div className={styles.culinary_card} key={item._id}>
+                <img src={item.image} className="img-fluid" alt={item.title} />
+                <div className={styles.culinary_content}>
+                  <div className="d-flex justify-content-between align-items-center mb-5">
+                    <h5 className="mb-0">{item.title}</h5>
+                    <span>{item.diningTime}</span>
+                  </div>
+                  <p className="mb-0">{item.description}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
