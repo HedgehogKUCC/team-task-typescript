@@ -189,10 +189,16 @@
 
 .culinary_card {
   position: relative;
-  width: calc(100% / 3);
+  width: 25%;
   flex-shrink: 0;
   border-radius: 8px;
   overflow: hidden;
+  &:first-child {
+    margin-left: 8%;
+  }
+  &:last-child {
+    margin-right: 8%;
+  }
 }
 
 .culinary_content {
@@ -205,15 +211,52 @@
   padding: 24px;
 }
 
+@media screen and (max-width: 1200px) {
+  .culinary_card {
+    width: calc(100% / 3);
+    &:first-child {
+      margin-left: 4%;
+    }
+    &:last-child {
+      margin-right: 4%;
+    }
+  }
+}
+
 @media screen and (max-width: 992px) {
   .culinary_card {
     width: 50%;
+    &:first-child {
+      margin-left: 3%;
+    }
+    &:last-child {
+      margin-right: 3%;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .culinary_card {
+    &:first-child {
+      margin-left: 5%;
+    }
+    &:last-child {
+      margin-right: 5%;
+    }
   }
 }
 
 @media screen and (max-width: 576px) {
   .culinary_card {
     width: 85%;
+    &:first-child {
+      --bs-gutter-x: 1.5rem;
+      margin-left: calc(var(--bs-gutter-x) * 0.5);
+    }
+    &:last-child {
+      --bs-gutter-x: 1.5rem;
+      margin-right: calc(var(--bs-gutter-x) * 0.5);
+    }
   }
 }
 

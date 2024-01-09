@@ -250,20 +250,20 @@ const Home = () => {
       <section className="bg_primary_10 py-8 py-md-9">
         <div className="container">
           <SectionTitle text={`佳餚\n美饌`} />
-          <div className={styles.culinary_wrap}>
-            {culinaryList.map((item) => (
-              <div className={styles.culinary_card} key={item._id}>
-                <img src={item.image} className="img-fluid" alt={item.title} />
-                <div className={styles.culinary_content}>
-                  <div className="d-flex justify-content-between align-items-center mb-5">
-                    <h5 className="mb-0">{item.title}</h5>
-                    <span>{item.diningTime}</span>
-                  </div>
-                  <p className="mb-0">{item.description}</p>
+        </div>
+        <div className={styles.culinary_wrap}>
+          {culinaryList.map((item) => (
+            <div className={styles.culinary_card} key={item._id}>
+              <img src={item.image} className="img-fluid" alt={item.title} />
+              <div className={styles.culinary_content}>
+                <div className="d-flex justify-content-between align-items-center mb-5">
+                  <h5 className="mb-0">{item.title}</h5>
+                  <span>{item.diningTime}</span>
                 </div>
+                <p className="mb-0">{item.description}</p>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -296,7 +296,7 @@ const Home = () => {
         <picture>
           <source
             srcSet="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E8%A1%8C%E5%8B%95%E7%89%88/line.png?raw=true"
-            media="(max-width: 586px)"
+            media="(max-width: 576px)"
           />
           <img
             src="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/line2.png?raw=true"
