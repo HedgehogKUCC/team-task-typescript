@@ -42,3 +42,4 @@ export const apiVerifyGenerateEmailCode = (data: { email: string }) =>
   verifyRequest.post("/generateEmailCode", data);
 
 export const apiHomeNews = () => homeRequest.get("/news");
+export const apiHomeCulinary = () => homeRequest.get("/culinary");

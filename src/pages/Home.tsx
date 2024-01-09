@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import HeroButton from "../components/HeroButton";
 import SectionTitle from "../components/SectionTitle";
 import styles from "../assets/scss/modules/home.module.scss";
-import { apiHomeNews } from "../api";
+import { apiHomeNews, apiHomeCulinary } from "../api";
 
 const Home = () => {
   // 輪播資料
@@ -52,6 +52,56 @@ const Home = () => {
   useEffect(() => {
     getNewsList();
   }, []);
+
+  // 佳餚美饌資料
+  interface ICulinaryList {
+    _id: string;
+    title: string;
+    description: string;
+    diningTime: string;
+    image: string;
+    createdAt: string;
+    updatedAt: string;
+  }
+
+  const [culinaryList, setCulinaryList] = useState<ICulinaryList[]>([]);
+
+  const getHomeCulinary = async () => {
+    const res = await apiHomeCulinary();
+    setCulinaryList(res.data.result);
+  };
+
+  useEffect(() => {
+    getHomeCulinary();
+  }, []);
+
+  // 交通方式資料
+  interface ITrafficList {
+    title: string;
+    description: string;
+    image: string;
+  }
+
+  const [trafficList] = useState<ITrafficList[]>([
+    {
+      title: "自行開車",
+      description:
+        "如果您選擇自行開車，可以透過國道一號下高雄交流道，往市區方向行駛，並依路標指示即可抵達「享樂酒店」。飯店內設有停車場，讓您停車方便。",
+      image: "ic_car",
+    },
+    {
+      title: "高鐵/火車",
+      description:
+        "如果您是搭乘高鐵或火車，可於左營站下車，外頭有計程車站，搭乘計程車約20分鐘即可抵達。或者您也可以轉乘捷運紅線至中央公園站下車，步行約10分鐘便可抵達。",
+      image: "ic_train",
+    },
+    {
+      title: "禮賓車服務",
+      description:
+        "承億酒店提供禮賓專車接送服務，但因目的地遠近會有不同的收費，請撥打電話將由專人為您服務洽詢專線：(07)123-4567",
+      image: "ic_luxurycar",
+    },
+  ]);
 
   return (
     <>
@@ -151,7 +201,10 @@ const Home = () => {
       </section>
 
       {/* 關於我們 */}
-      <section className="bg-dark position-relative py-9" style={{ zIndex: 1 }}>
+      <section
+        className="bg-dark position-relative py-9 overflow-hidden"
+        style={{ zIndex: 1 }}
+      >
         <picture>
           <source
             srcSet="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E8%A1%8C%E5%8B%95%E7%89%88/about.png?raw=true"
@@ -191,6 +244,66 @@ const Home = () => {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* 佳餚美饌 */}
+      <section className="bg_primary_10 py-8 py-md-9">
+        <div className="container">
+          <SectionTitle text={`佳餚\n美饌`} />
+          <div className={styles.culinary_wrap}>
+            {culinaryList.map((item) => (
+              <div className={styles.culinary_card} key={item._id}>
+                <img src={item.image} className="img-fluid" alt={item.title} />
+                <div className={styles.culinary_content}>
+                  <div className="d-flex justify-content-between align-items-center mb-5">
+                    <h5 className="mb-0">{item.title}</h5>
+                    <span>{item.diningTime}</span>
+                  </div>
+                  <p className="mb-0">{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 交通方式 */}
+      <section className="bg_dark pt-8 pt-md-9">
+        <div className="container">
+          <SectionTitle text={`交通\n方式`} />
+          <p className="fw-bold">台灣高雄市新興區六角路123號</p>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3682.563954606116!2d120.3015996!3d22.6327527!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346e048bc2dddd65%3A0xca0cdefc0976d4f7!2zODAw6auY6ZuE5biC5paw6IiI5Y2A5YWt5ZCI5LqM6LevMeiZnw!5e0!3m2!1szh-TW!2stw!4v1704699004506!5m2!1szh-TW!2stw"
+            height="360"
+            style={{ width: "100%", border: 0, borderRadius: "8px" }}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
+          <div className="row mt-5 mt-sm-7">
+            {trafficList.map((item, index) => (
+              <div className="col-12 col-sm-4 mb-5 mb-sm-0" key={index}>
+                <img
+                  src={`./Homepage/${item.image}.svg`}
+                  className={styles.traffic_img}
+                  alt={item.title}
+                />
+                <h5 className="mt-3">{item.title}</h5>
+                <p className="fs-7 mb-0">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <picture>
+          <source
+            srcSet="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E8%A1%8C%E5%8B%95%E7%89%88/line.png?raw=true"
+            media="(max-width: 586px)"
+          />
+          <img
+            src="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/line2.png?raw=true"
+            className="img-fluid mt-7 mt-sm-8"
+            alt="裝飾性線條"
+          />
+        </picture>
       </section>
       <Footer />
     </>

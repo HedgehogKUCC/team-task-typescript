@@ -10,6 +10,10 @@ body {
   line-height: $line-height-base;
 }
 
+::selection {
+  background: $primary;
+}
+
 h1,
 h2,
 h3,
