@@ -6,6 +6,7 @@ import App from './App';
 
 // Bootstrap Bundle JS
 import "bootstrap/dist/js/bootstrap.bundle.min";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import './assets/scss/all.scss';
 

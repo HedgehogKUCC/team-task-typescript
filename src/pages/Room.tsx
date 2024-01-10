@@ -2,10 +2,10 @@ import { useState } from 'react';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-import SizeIcon from "/ic_Size.svg"
-import PersonIcon from "/ic_Person.svg"
-import CarIcon from "/ic_Car.svg"
-import ArrowRightIcon from "/ic_ArrowRight.svg"
+import SizeIcon from "/ic_Size.svg";
+import PersonIcon from "/ic_Person.svg";
+import CarIcon from "/ic_Car.svg";
+import ArrowRightIcon from "/ic_ArrowRight.svg";
 
 const Room = () => {
   // 輪播資料
