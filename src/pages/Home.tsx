@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import HeroButton from "../components/HeroButton";
 import SectionTitle from "../components/SectionTitle";
 import styles from "../assets/scss/modules/home.module.scss";
-import { apiHomeNews, apiHomeCulinary } from "../api";
+import { apiHomeNews, apiHomeCulinary, apiRoomsList } from "../api";
 
 const Home = () => {
   // 輪播資料
@@ -52,6 +52,55 @@ const Home = () => {
   useEffect(() => {
     getNewsList();
   }, []);
+
+  // 房型輪播資料
+  interface IRoomList {
+    _id: string;
+    name: string;
+    description: string;
+    imageUrl: string;
+    imageUrlList: string[];
+    areaInfo: string;
+    bedInfo: string;
+    maxPeople: number;
+    price: number;
+    status: number;
+    facilityInfo: IFacilityInfo[];
+    amenityInfo: IAmenityInfo[];
+    createdAt: string;
+    updatedAt: string;
+  }
+
+  interface IFacilityInfo {
+    title: string;
+    isProvide: boolean;
+  }
+
+  interface IAmenityInfo {
+    title: string;
+    isProvide: boolean;
+  }
+
+  const [roomList, setRoomList] = useState<IRoomList[]>([]);
+
+  const getRoomList = async () => {
+    const res = await apiRoomsList();
+    setRoomList(res.data.result);
+  };
+
+  useEffect(() => {
+    getRoomList();
+  }, []);
+
+  const [activeRoomImgIndex, setActiveRoomImgIndex] = useState(0);
+
+  const [activeRoomIndex, setActiveRoomIndex] = useState(0);
+
+  const [activeRoomData, setActiveRoomData] = useState(roomList[0]);
+
+  useEffect(() => {
+    setActiveRoomData(roomList[activeRoomIndex]);
+  }, [activeRoomIndex, roomList]);
 
   // 佳餚美饌資料
   interface ICulinaryList {
@@ -246,24 +295,106 @@ const Home = () => {
         </div>
       </section>
 
+      {/* 房型輪播 */}
+      <section className={`bg-dark py-8 py-md-9 ${styles.room_section}`}>
+        <div className="container-fluid g-6 g-md-0 overflow-hidden">
+          <div className="row align-items-end">
+            <div className="col-12 col-md-6 mb-5 mb-md-0">
+              <div
+                id="carouselExampleIndicators2"
+                className="carousel slide carousel-fade"
+                data-bs-ride="carousel"
+              >
+                <div className="carousel-indicators">
+                  {activeRoomData?.imageUrlList.map((item, index) => (
+                    <button
+                      key={item}
+                      type="button"
+                      data-bs-target="#carouselExampleIndicators2"
+                      data-bs-slide-to={index}
+                      className={index === activeRoomImgIndex ? "active" : ""}
+                      aria-current={
+                        index === activeRoomImgIndex ? "true" : "false"
+                      }
+                      aria-label={`Slide ${index + 1}`}
+                      onClick={() => setActiveRoomImgIndex(index)}
+                    ></button>
+                  ))}
+                </div>
+                <div className="carousel-inner">
+                  {activeRoomData?.imageUrlList.map((item, index) => {
+                    return (
+                      <div
+                        key={item}
+                        className={`carousel-item ${
+                          index === activeIndex ? "active" : ""
+                        }`}
+                      >
+                        <picture className={styles.room_picture}>
+                          <img src={item} alt={`Slide ${index + 1}`} />
+                        </picture>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+            <div className="col-12 col-md-6 col-lg-5 px-md-6 px-lg-7 px-xl-8">
+              <h2 className="fw-bold mb-4">{activeRoomData?.name}</h2>
+              <p className="fs-7">{activeRoomData?.description}</p>
+              <h3 className="fw-bold my-5 my-md-7">
+                NT$ {activeRoomData?.price.toLocaleString()}
+              </h3>
+              <HeroButton text="查看更多" />
+              <div className="d-flex justify-content-end mt-5 mt-md-7">
+                <img
+                  src="./ic_ArrowLeft.svg"
+                  className={`p-3 ${styles.room_arrow}`}
+                  onClick={() =>
+                    setActiveRoomIndex(
+                      activeRoomIndex === 0
+                        ? roomList.length - 1
+                        : activeRoomIndex - 1,
+                    )
+                  }
+                  alt="前一頁"
+                />
+                <img
+                  src="./ic_ArrowRight.svg"
+                  className={`p-3 ${styles.room_arrow}`}
+                  onClick={() =>
+                    setActiveRoomIndex(
+                      activeRoomIndex === roomList.length - 1
+                        ? 0
+                        : activeRoomIndex + 1,
+                    )
+                  }
+                  alt="下一頁"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 佳餚美饌 */}
       <section className="bg_primary_10 py-8 py-md-9">
         <div className="container">
           <SectionTitle text={`佳餚\n美饌`} />
-          <div className={styles.culinary_wrap}>
-            {culinaryList.map((item) => (
-              <div className={styles.culinary_card} key={item._id}>
-                <img src={item.image} className="img-fluid" alt={item.title} />
-                <div className={styles.culinary_content}>
-                  <div className="d-flex justify-content-between align-items-center mb-5">
-                    <h5 className="mb-0">{item.title}</h5>
-                    <span>{item.diningTime}</span>
-                  </div>
-                  <p className="mb-0">{item.description}</p>
+        </div>
+        <div className={styles.culinary_wrap}>
+          {culinaryList.map((item) => (
+            <div className={styles.culinary_card} key={item._id}>
+              <img src={item.image} className="img-fluid" alt={item.title} />
+              <div className={styles.culinary_content}>
+                <div className="d-flex justify-content-between align-items-center mb-5">
+                  <h5 className="mb-0">{item.title}</h5>
+                  <span>{item.diningTime}</span>
                 </div>
+                <p className="mb-0">{item.description}</p>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -296,7 +427,7 @@ const Home = () => {
         <picture>
           <source
             srcSet="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E8%A1%8C%E5%8B%95%E7%89%88/line.png?raw=true"
-            media="(max-width: 586px)"
+            media="(max-width: 576px)"
           />
           <img
             src="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/line2.png?raw=true"

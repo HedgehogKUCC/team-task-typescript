@@ -182,17 +182,20 @@
   flex-wrap: nowrap;
   grid-gap: 24px;
   overflow-x: scroll;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .culinary_card {
   position: relative;
-  width: calc(100% / 3);
+  width: 25%;
   flex-shrink: 0;
   border-radius: 8px;
   overflow: hidden;
+  &:first-child {
+    margin-left: 8%;
+  }
+  &:last-child {
+    margin-right: 8%;
+  }
 }
 
 .culinary_content {
@@ -205,19 +208,117 @@
   padding: 24px;
 }
 
+@media screen and (max-width: 1200px) {
+  .culinary_card {
+    width: calc(100% / 3);
+    &:first-child {
+      margin-left: 4%;
+    }
+    &:last-child {
+      margin-right: 4%;
+    }
+  }
+}
+
 @media screen and (max-width: 992px) {
   .culinary_card {
     width: 50%;
+    &:first-child {
+      margin-left: 3%;
+    }
+    &:last-child {
+      margin-right: 3%;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .culinary_card {
+    &:first-child {
+      margin-left: 5%;
+    }
+    &:last-child {
+      margin-right: 5%;
+    }
   }
 }
 
 @media screen and (max-width: 576px) {
   .culinary_card {
     width: 85%;
+    &:first-child {
+      --bs-gutter-x: 1.5rem;
+      margin-left: calc(var(--bs-gutter-x) * 0.5);
+    }
+    &:last-child {
+      --bs-gutter-x: 1.5rem;
+      margin-right: calc(var(--bs-gutter-x) * 0.5);
+    }
   }
 }
 
-// 交通方式
+// 房型輪播區塊
+.room_section {
+  background-image: url("https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/bg.png?raw=true"),
+    url("https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/line3.png?raw=true");
+  background-position:
+    right bottom 5%,
+    right top 180px;
+  background-size: contain, 60%;
+  background-repeat: no-repeat;
+}
+
+.room_picture {
+  display: block;
+  height: 90vh;
+  border-radius: 0 8px 8px 0;
+  overflow: hidden;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.room_arrow {
+  cursor: pointer;
+  transition-duration: 0.15s;
+  &:hover {
+    filter: brightness(2);
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .room_picture {
+    height: 70vh;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .room_picture {
+    height: 60vh;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .room_picture {
+    height: 50vh;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .room_section {
+    background-image: url("https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/bg.png?raw=true"),
+      url("https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E8%A1%8C%E5%8B%95%E7%89%88/line.png?raw=true");
+    background-position:
+      right bottom 35%,
+      right top;
+    background-size: contain, 80%;
+    background-repeat: no-repeat;
+  }
+}
+
+// 交通方式區塊
 @media screen and (max-width: 576px) {
   .traffic_img {
     width: 48px;

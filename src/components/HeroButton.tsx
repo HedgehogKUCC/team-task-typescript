@@ -7,7 +7,7 @@ const HeroButton = ({ text }: HeroButtonProps) => {
     <>
       <button
         type="button"
-        className="p-md-7 p-4 btn btn-light btn-lg w-100 fw-bold hero_button"
+        className="p-4 p-lg-6 p-xl-7 btn btn-light btn-lg w-100 fw-bold hero_button"
       >
         {text}
       </button>

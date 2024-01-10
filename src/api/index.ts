@@ -14,6 +14,10 @@ const homeRequest = axios.create({
   baseURL: `${API_BASE_URL}/v1/home`,
 });
 
+const roomsRequest = axios.create({
+  baseURL: `${API_BASE_URL}/v1/rooms`,
+});
+
 interface IApiUserSignUpData {
   name: string;
   email: string;
@@ -43,3 +47,5 @@ export const apiVerifyGenerateEmailCode = (data: { email: string }) =>
 
 export const apiHomeNews = () => homeRequest.get("/news");
 export const apiHomeCulinary = () => homeRequest.get("/culinary");
+
+export const apiRoomsList = () => roomsRequest.get("/");
