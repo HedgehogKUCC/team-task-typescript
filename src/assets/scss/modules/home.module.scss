@@ -144,6 +144,39 @@
   }
 }
 
+// 最新消息區塊
+.news_dot {
+  position: absolute;
+  width: 200px;
+  z-index: -1;
+}
+
+.news_dot_1 {
+  top: -20px;
+  right: -68px;
+}
+
+.news_dot_2 {
+  bottom: -80px;
+  left: 200px;
+}
+
+@media screen and (max-width: 576px) {
+  .news_dot {
+    width: 100px;
+  }
+
+  .news_dot_1 {
+    top: -40px;
+    right: 24px;
+  }
+
+  .news_dot_2 {
+    bottom: -60px;
+    left: 24px;
+  }
+}
+
 // 關於我們區塊
 .about_bg {
   position: absolute;
@@ -176,26 +209,22 @@
   }
 }
 
+@media screen and (max-width: 576px) {
+  .about_bg {
+    top: 80px;
+  }
+}
+
 // 佳餚美饌區塊
-.culinary_wrap {
-  display: flex;
-  flex-wrap: nowrap;
-  grid-gap: 24px;
-  overflow-x: scroll;
+.culinary_swiper {
+  overflow: initial !important;
 }
 
 .culinary_card {
   position: relative;
-  width: 25%;
   flex-shrink: 0;
   border-radius: 8px;
   overflow: hidden;
-  &:first-child {
-    margin-left: 8%;
-  }
-  &:last-child {
-    margin-right: 8%;
-  }
 }
 
 .culinary_content {
@@ -208,52 +237,28 @@
   padding: 24px;
 }
 
-@media screen and (max-width: 1200px) {
-  .culinary_card {
-    width: calc(100% / 3);
-    &:first-child {
-      margin-left: 4%;
-    }
-    &:last-child {
-      margin-right: 4%;
-    }
-  }
+.culinary_dot {
+  position: absolute;
+  width: 200px;
+  right: 80px;
 }
 
-@media screen and (max-width: 992px) {
-  .culinary_card {
-    width: 50%;
-    &:first-child {
-      margin-left: 3%;
-    }
-    &:last-child {
-      margin-right: 3%;
-    }
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .culinary_card {
-    &:first-child {
-      margin-left: 5%;
-    }
-    &:last-child {
-      margin-right: 5%;
-    }
-  }
+.culinary_line {
+  position: absolute;
+  width: 20%;
+  max-width: 187px;
+  top: 55px;
+  left: 1%;
+  z-index: -1;
 }
 
 @media screen and (max-width: 576px) {
-  .culinary_card {
-    width: 85%;
-    &:first-child {
-      --bs-gutter-x: 1.5rem;
-      margin-left: calc(var(--bs-gutter-x) * 0.5);
-    }
-    &:last-child {
-      --bs-gutter-x: 1.5rem;
-      margin-right: calc(var(--bs-gutter-x) * 0.5);
-    }
+  .culinary_dot {
+    display: none;
+  }
+
+  .culinary_line {
+    display: none;
   }
 }
 
