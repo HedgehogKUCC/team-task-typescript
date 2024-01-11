@@ -156,7 +156,7 @@ const Home = () => {
   ]);
 
   return (
-    <>
+    <div style={{ overflowX: "hidden" }}>
       <Navbar />
 
       {/* 輪播區塊 */}
@@ -223,8 +223,16 @@ const Home = () => {
       </div>
 
       {/* 最新消息 */}
-      <section className="bg_primary_10 py-8 py-md-9">
-        <div className="container">
+      <section
+        className="bg_primary_10 pt-8 pb-7 py-md-9 position-relative"
+        style={{ zIndex: 2 }}
+      >
+        <div className="container position-relative">
+          <img
+            src="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/dot.png?raw=true"
+            alt="裝飾性圓點"
+            className={`${styles.news_dot} ${styles.news_dot_1}`}
+          />
           <div className="row">
             <div className="col-md-2 col-12">
               <SectionTitle text={`最新\n消息`} decoPosition="bottom" />
@@ -250,11 +258,16 @@ const Home = () => {
             </div>
           </div>
         </div>
+        <img
+          src="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/dot.png?raw=true"
+          alt="裝飾性圓點"
+          className={`${styles.news_dot} ${styles.news_dot_2}`}
+        />
       </section>
 
       {/* 關於我們 */}
       <section
-        className="bg-dark position-relative py-9 overflow-hidden"
+        className="bg-dark position-relative py-8 py-md-9 overflow-hidden"
         style={{ zIndex: 1 }}
       >
         <picture>
@@ -468,7 +481,7 @@ const Home = () => {
         </picture>
       </section>
       <Footer />
-    </>
+    </div>
   );
 };
 
