@@ -5,6 +5,9 @@ import HeroButton from "../components/HeroButton";
 import SectionTitle from "../components/SectionTitle";
 import styles from "../assets/scss/modules/home.module.scss";
 import { apiHomeNews, apiHomeCulinary, apiRoomsList } from "../api";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import { Autoplay } from "swiper/modules";
 
 const Home = () => {
   // 輪播資料
@@ -378,23 +381,51 @@ const Home = () => {
       </section>
 
       {/* 佳餚美饌 */}
-      <section className="bg_primary_10 py-8 py-md-9">
+      <section className="bg_primary_10 py-8 py-md-9 overflow-hidden">
         <div className="container">
           <SectionTitle text={`佳餚\n美饌`} />
         </div>
-        <div className={styles.culinary_wrap}>
-          {culinaryList.map((item) => (
-            <div className={styles.culinary_card} key={item._id}>
-              <img src={item.image} className="img-fluid" alt={item.title} />
-              <div className={styles.culinary_content}>
-                <div className="d-flex justify-content-between align-items-center mb-5">
-                  <h5 className="mb-0">{item.title}</h5>
-                  <span>{item.diningTime}</span>
+        <div className="container">
+          <Swiper
+            spaceBetween={24}
+            slidesPerView={1.2}
+            breakpoints={{
+              576: {
+                slidesPerView: 1.2,
+              },
+              768: {
+                slidesPerView: 2,
+              },
+              1200: {
+                slidesPerView: 3.2,
+              },
+            }}
+            autoplay={{
+              delay: 2500,
+              disableOnInteraction: false,
+            }}
+            modules={[Autoplay]}
+            className={styles.culinary_swiper}
+          >
+            {culinaryList.map((item) => (
+              <SwiperSlide key={item._id}>
+                <div className={styles.culinary_card}>
+                  <img
+                    src={item.image}
+                    className="img-fluid"
+                    alt={item.title}
+                  />
+                  <div className={styles.culinary_content}>
+                    <div className="d-flex justify-content-between align-items-center mb-5">
+                      <h5 className="mb-0">{item.title}</h5>
+                      <span>{item.diningTime}</span>
+                    </div>
+                    <p className="mb-0">{item.description}</p>
+                  </div>
                 </div>
-                <p className="mb-0">{item.description}</p>
-              </div>
-            </div>
-          ))}
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
       </section>
 
