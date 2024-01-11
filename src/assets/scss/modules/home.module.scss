@@ -237,6 +237,31 @@
   padding: 24px;
 }
 
+.culinary_dot {
+  position: absolute;
+  width: 200px;
+  right: 80px;
+}
+
+.culinary_line {
+  position: absolute;
+  width: 20%;
+  max-width: 187px;
+  top: 55px;
+  left: 1%;
+  z-index: -1;
+}
+
+@media screen and (max-width: 576px) {
+  .culinary_dot {
+    display: none;
+  }
+
+  .culinary_line {
+    display: none;
+  }
+}
+
 // 房型輪播區塊
 .room_section {
   background-image: url("https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/bg.png?raw=true"),

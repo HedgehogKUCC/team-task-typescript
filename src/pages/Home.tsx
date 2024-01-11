@@ -394,7 +394,15 @@ const Home = () => {
       </section>
 
       {/* 佳餚美饌 */}
-      <section className="bg_primary_10 py-8 py-md-9 overflow-hidden">
+      <section
+        className="bg_primary_10 py-8 py-md-9 position-relative"
+        style={{ zIndex: 1 }}
+      >
+        <img
+          src="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/dot.png?raw=true"
+          alt="裝飾性圓點"
+          className={styles.culinary_dot}
+        />
         <div className="container">
           <SectionTitle text={`佳餚\n美饌`} />
         </div>
@@ -440,6 +448,11 @@ const Home = () => {
             ))}
           </Swiper>
         </div>
+        <img
+          src="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/line.png?raw=true"
+          alt="裝飾性線條"
+          className={styles.culinary_line}
+        />
       </section>
 
       {/* 交通方式 */}
