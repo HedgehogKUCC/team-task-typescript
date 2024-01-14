@@ -138,7 +138,7 @@ const Room = () => {
                 {/* 輪播區塊 */}
                 <div id={`carouselExampleIndicators-${roomIndex}`} className="col-7 carousel slide carousel-fade" data-bs-ride="carousel">
                   <div className="carousel-indicators mx-0">
-                    {item.imageUrlList.map((imageUrl, i) => (
+                    {item.imageUrlList.map((_imageUrl, i) => (
                       <button
                         key={i + 1}
                         type='button'
