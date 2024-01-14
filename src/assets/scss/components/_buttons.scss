@@ -36,6 +36,23 @@
       }
     }
   }
+
+  &.cus_primary_button {
+    &:hover {
+      background-color: $primary-600;
+    }
+  }
+
+  &.cus_secondary_button {
+    border: solid 1px;
+    border-color: $primary;
+
+    &:hover {
+      background-color: $primary-150;
+      color: $primary-600;
+      border-color: $primary-600;
+    }
+  }
 }
 
 @media screen and (max-width: 576px) {
