@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { store } from "./store";
 import { Provider } from "react-redux";
 
@@ -40,7 +40,8 @@ const App = () => {
               element={<ReserveRoomSuccess />}
             ></Route>
             <Route path="/member" element={<MemberLayout />}>
-              <Route index element={<MemberInfo />}></Route>
+              <Route index element={<Navigate to="info" replace />}></Route>
+              <Route path="info" element={<MemberInfo />}></Route>
               <Route path="order" element={<MemberOrder />}></Route>
             </Route>
             <Route path="*" element={<NotFound />}></Route>
