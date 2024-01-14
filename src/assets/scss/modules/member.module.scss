@@ -1,0 +1,32 @@
+@import "../index";
+
+.member_header {
+  background-image: url("https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/hero.png?raw=true");
+  background-size: cover;
+  background-position: center;
+  padding: 120px 0;
+}
+
+// FIXME: 目前尚無法對應路由顯示下底線
+// .member_tab {
+//   position: relative;
+
+// &::after {
+//   content: "";
+//   position: absolute;
+//   bottom: 4px;
+//   left: 50%;
+//   transform: translateX(-50%);
+//   width: 32px;
+//   height: 4px;
+//   border-radius: 10px;
+//   background-color: $primary;
+// }
+// }
+
+@media screen and (max-width: 576px) {
+  .member_header {
+    background-image: url("https://images.unsplash.com/photo-1606744837616-56c9a5c6a6eb?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+    padding: 40px 0;
+  }
+}

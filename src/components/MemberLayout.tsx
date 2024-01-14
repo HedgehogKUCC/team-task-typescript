@@ -1,38 +1,75 @@
-import { Outlet } from 'react-router-dom';
-import Navbar from './Navbar';
-import Footer from './Footer';
+import { useState } from "react";
+import { NavLink, Outlet } from "react-router-dom";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import styles from "../assets/scss/modules/member.module.scss";
 
 const MemberLayout = () => {
+  // 選單資料
+  const [tabList] = useState([
+    {
+      name: "個人資料",
+      path: "info",
+    },
+    {
+      name: "我的訂單",
+      path: "order",
+    },
+  ]);
+
   return (
     <>
       <Navbar isEscapeDocumentFlow={false} />
-      <figure className="mb-8">
-        <img className="img-fluid" src="https://raw.githubusercontent.com/hexschool/2022-web-layout-training/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/hero.png" alt="" />
-      </figure>
-      <div className="mb-8 container">
-        <div className="row justify-content-center">
-          <div className="col-9">
-            <ul className="nav">
-              <li className="nav-item">
-                <a className="px-5 py-3 nav-link text-white active" href="#">個人資料</a>
-              </li>
-              <li className="nav-item">
-                <a className="px-5 py-3 nav-link text-white" href="#">我的訂單</a>
-              </li>
-            </ul>
+
+      {/* Banner */}
+      <header className={styles.member_header}>
+        <div className="container">
+          <div className="d-flex align-items-center">
+            <img
+              src="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/user1.png?raw=true"
+              alt="使用者頭像"
+              className="me-5"
+              style={{ width: "12%", maxWidth: "144px", minWidth: "72px" }}
+            />
+            <h1 className="fw-bold mb-0">Hello, </h1>
           </div>
         </div>
-      </div>
-      <div className="mb-9 container">
-        <div className="row justify-content-center">
-          <div className="col-9">
-            <Outlet />
-          </div>
+      </header>
+
+      {/* 主要內容 */}
+      <section>
+        <div className="container">
+          <ul className="list-unstyled d-flex my-7 my-sm-8">
+            {tabList.map((item, index) => (
+              <li key={index} className="d-block">
+                <NavLink
+                  to={`/member/${item.path}`}
+                  className={`text-decoration-none fw-bold py-5 px-3 ${styles.member_tab}`}
+                  style={({ isActive }) => {
+                    return {
+                      color: isActive ? "#BF9D7D" : "#fff",
+                    };
+                  }}
+                >
+                  {item.name}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+          <Outlet />
         </div>
-      </div>
-      <figure>
-        <img className="img-fluid" src="https://raw.githubusercontent.com/hexschool/2022-web-layout-training/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/line2.png" alt="" />
-      </figure>
+        <picture>
+          <source
+            srcSet="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E8%A1%8C%E5%8B%95%E7%89%88/line.png?raw=true"
+            media="(max-width: 576px)"
+          />
+          <img
+            src="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/line2.png?raw=true"
+            className="img-fluid mt-7 mt-md-8 mt-sm-9"
+            alt="裝飾性線條"
+          />
+        </picture>
+      </section>
       <Footer />
     </>
   );
