@@ -5,6 +5,9 @@ import HeroButton from "../components/HeroButton";
 import SectionTitle from "../components/SectionTitle";
 import styles from "../assets/scss/modules/home.module.scss";
 import { apiHomeNews, apiHomeCulinary, apiRoomsList } from "../api";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import { Autoplay } from "swiper/modules";
 
 const Home = () => {
   // 輪播資料
@@ -153,7 +156,7 @@ const Home = () => {
   ]);
 
   return (
-    <>
+    <div style={{ overflowX: "hidden" }}>
       <Navbar />
 
       {/* 輪播區塊 */}
@@ -220,8 +223,16 @@ const Home = () => {
       </div>
 
       {/* 最新消息 */}
-      <section className="bg_primary_10 py-8 py-md-9">
-        <div className="container">
+      <section
+        className="bg_primary_10 pt-8 pb-7 py-md-9 position-relative"
+        style={{ zIndex: 2 }}
+      >
+        <div className="container position-relative">
+          <img
+            src="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/dot.png?raw=true"
+            alt="裝飾性圓點"
+            className={`${styles.news_dot} ${styles.news_dot_1}`}
+          />
           <div className="row">
             <div className="col-md-2 col-12">
               <SectionTitle text={`最新\n消息`} decoPosition="bottom" />
@@ -247,11 +258,16 @@ const Home = () => {
             </div>
           </div>
         </div>
+        <img
+          src="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/dot.png?raw=true"
+          alt="裝飾性圓點"
+          className={`${styles.news_dot} ${styles.news_dot_2}`}
+        />
       </section>
 
       {/* 關於我們 */}
       <section
-        className="bg-dark position-relative py-9 overflow-hidden"
+        className="bg-dark position-relative py-8 py-md-9 overflow-hidden"
         style={{ zIndex: 1 }}
       >
         <picture>
@@ -378,24 +394,65 @@ const Home = () => {
       </section>
 
       {/* 佳餚美饌 */}
-      <section className="bg_primary_10 py-8 py-md-9">
+      <section
+        className="bg_primary_10 py-8 py-md-9 position-relative"
+        style={{ zIndex: 1 }}
+      >
+        <img
+          src="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/dot.png?raw=true"
+          alt="裝飾性圓點"
+          className={styles.culinary_dot}
+        />
         <div className="container">
           <SectionTitle text={`佳餚\n美饌`} />
         </div>
-        <div className={styles.culinary_wrap}>
-          {culinaryList.map((item) => (
-            <div className={styles.culinary_card} key={item._id}>
-              <img src={item.image} className="img-fluid" alt={item.title} />
-              <div className={styles.culinary_content}>
-                <div className="d-flex justify-content-between align-items-center mb-5">
-                  <h5 className="mb-0">{item.title}</h5>
-                  <span>{item.diningTime}</span>
+        <div className="container">
+          <Swiper
+            spaceBetween={24}
+            slidesPerView={1.2}
+            breakpoints={{
+              576: {
+                slidesPerView: 1.2,
+              },
+              768: {
+                slidesPerView: 2,
+              },
+              1200: {
+                slidesPerView: 3.2,
+              },
+            }}
+            autoplay={{
+              delay: 2500,
+              disableOnInteraction: false,
+            }}
+            modules={[Autoplay]}
+            className={styles.culinary_swiper}
+          >
+            {culinaryList.map((item) => (
+              <SwiperSlide key={item._id}>
+                <div className={styles.culinary_card}>
+                  <img
+                    src={item.image}
+                    className="img-fluid"
+                    alt={item.title}
+                  />
+                  <div className={styles.culinary_content}>
+                    <div className="d-flex justify-content-between align-items-center mb-5">
+                      <h5 className="mb-0">{item.title}</h5>
+                      <span>{item.diningTime}</span>
+                    </div>
+                    <p className="mb-0">{item.description}</p>
+                  </div>
                 </div>
-                <p className="mb-0">{item.description}</p>
-              </div>
-            </div>
-          ))}
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
+        <img
+          src="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/line.png?raw=true"
+          alt="裝飾性線條"
+          className={styles.culinary_line}
+        />
       </section>
 
       {/* 交通方式 */}
@@ -437,7 +494,7 @@ const Home = () => {
         </picture>
       </section>
       <Footer />
-    </>
+    </div>
   );
 };
 
