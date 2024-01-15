@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import useApiHook from "./http";
 const API_BASE_URL = "https://freyja-8dr3.onrender.com/api";
 
 const userRequest = axios.create({
@@ -18,6 +18,21 @@ const roomsRequest = axios.create({
   baseURL: `${API_BASE_URL}/v1/rooms`,
 });
 
+const orderRequest = axios.create({
+  baseURL: `${API_BASE_URL}/v1/order`,
+});
+
+orderRequest.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 interface IApiUserSignUpData {
   name: string;
   email: string;
@@ -29,7 +44,10 @@ interface IApiUserSignUpData {
     detail: string;
   };
 }
-
+export const useApiSingleRoom = (id: string) => {
+  const { data, loading, error } = useApiHook(`rooms/${id}`, 'get');
+  return { data, loading, error };
+};
 export const apiUserSignUp = (data: IApiUserSignUpData) =>
   userRequest.post("/signup", data);
 export const apiUserLogin = (data: { email: string; password: string }) =>

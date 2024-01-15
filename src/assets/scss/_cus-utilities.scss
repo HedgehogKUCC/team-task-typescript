@@ -60,6 +60,9 @@
 .fs-40{
   font-size: 40px;
 }
+.fs-48{
+  font-size: 48px;
+}
 
 
 // border-radius
@@ -77,9 +80,19 @@
   object-fit: cover;
 }
 
+@media screen and (min-width: 768px) {
+  .fs-md-1 {
+    font-size: 48px !important;
+  }
+}
+
+
 @media screen and (max-width: 576px) {
   .fs-7 {
     font-size: 0.875rem;
+  }
+  .fs-48{
+    font-size: 32px;
   }
 }
 
