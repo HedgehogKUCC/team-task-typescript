@@ -107,15 +107,39 @@ const Login = () => {
 
   const onClickOpenModalHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    forgotPasswordModal!.show();
+    if (!forgotPasswordModal) {
+      MySwal.fire({
+        text: "forgotPasswordModal didn't find",
+        icon: "error",
+        showConfirmButton: false,
+      });
+      return;
+    }
+    forgotPasswordModal.show();
   };
 
   const hideModal = () => {
-    forgotPasswordModal!.hide();
+    if (!forgotPasswordModal) {
+      MySwal.fire({
+        text: "forgotPasswordModal didn't find",
+        icon: "error",
+        showConfirmButton: false,
+      });
+      return;
+    }
+    forgotPasswordModal.hide();
   };
 
   useEffect(() => {
-    forgotPasswordModal = new Modal(modalRef.current!);
+    if (!modalRef.current) {
+      MySwal.fire({
+        text: "modalRef.current didn't find",
+        icon: "error",
+        showConfirmButton: false,
+      });
+      return;
+    }
+    forgotPasswordModal = new Modal(modalRef.current);
 
     if (localStorageEmail) {
       setValue("email", localStorageEmail);
