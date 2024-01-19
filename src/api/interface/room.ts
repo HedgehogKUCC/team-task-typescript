@@ -19,3 +19,8 @@ export interface Room {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface IRoomData {
+    status: boolean;
+    result: Room;
+}

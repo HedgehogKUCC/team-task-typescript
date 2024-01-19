@@ -1,15 +1,17 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CheckGreenIcon from "/ic_checkGreen.svg";
 import CheckIcon from "/ic_check_primary.svg";
 import LineIcon from "/ic_line.svg";
-
+import { useLocation } from "react-router-dom"; // 或者 '@reach/router'
 import { useAppSelector, useAppDispatch } from "../store/hook";
 import { selectUser, setName, setToken } from "../store/slices/userSlice";
+import { selectOrder } from "../store/slices/orderSlice";
 const ReserveRoomSuccess = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
+  const order = useAppSelector(selectOrder);
   const localStorageName =
     localStorage.getItem("enjoyment_luxury_hotel_name") || "";
   const localStorageToken =
@@ -23,6 +25,14 @@ const ReserveRoomSuccess = () => {
   if (!user.token && localStorageToken) {
     dispatch(setToken(UserToken));
   }
+  const location = useLocation();
+  const reserveData = location.state?.data;
+
+  useEffect(() => {
+    console.log("order", order);
+
+    console.log(reserveData);
+  }, [reserveData]);
   return (
     <>
       <Navbar isEscapeDocumentFlow={false} />
@@ -37,6 +47,7 @@ const ReserveRoomSuccess = () => {
                   alt="CheckGreenIcon"
                 />
                 <div>
+                  <p>{reserveData}</p>
                   <h2 className="fs-md-1 fs-3">恭喜，{UserName}！</h2>
                   <h2 className="fs-md-1 fs-3">您已預訂成功</h2>
                 </div>
