@@ -1,6 +1,7 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import signUpReducer from "./slices/signUpSlice";
 import userReducer from "./slices/userSlice";
+import Modal from 'react-modal';
 
 export const store = configureStore({
   reducer: {
@@ -8,7 +9,7 @@ export const store = configureStore({
     user: userReducer,
   },
 });
-
+Modal.setAppElement('#root');
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
 export type AppThunk<ReturnType = void> = ThunkAction<

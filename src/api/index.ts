@@ -1,4 +1,5 @@
 import axios from "axios";
+import interceptorRequest from "./utils/interceptorRequest";
 
 const API_BASE_URL = "https://freyja-8dr3.onrender.com/api";
 
@@ -17,6 +18,8 @@ const homeRequest = axios.create({
 const roomsRequest = axios.create({
   baseURL: `${API_BASE_URL}/v1/rooms`,
 });
+
+interceptorRequest(userRequest);
 
 interface IApiUserSignUpData {
   name: string;
