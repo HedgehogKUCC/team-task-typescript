@@ -4,11 +4,29 @@ import { apiUserData } from "../api";
 
 const MemberInfo = () => {
   // 使用者資料
-  const [userData, setUserData] = useState({});
+  interface IUserData {
+    address: {
+      zipcode: number;
+      detail: string;
+      county: string;
+      city: string;
+    };
+    id: string;
+    _id: string;
+    name: string;
+    email: string;
+    phone: string;
+    birthday: string;
+    createdAt: string;
+    updatedAt: string;
+  }
+  const [userData, setUserData] = useState<IUserData>({} as IUserData);
 
   const getUserData = async () => {
     const res = await apiUserData();
-    console.log(res);
+    if (res.data.status) {
+      setUserData(res.data.result);
+    }
   };
 
   useEffect(() => {
@@ -29,7 +47,7 @@ const MemberInfo = () => {
               <div className="mb-5">
                 <label className="form-label text-gray-dark">電子信箱</label>
                 <div className="text-black fw-bold text-break">
-                  Jessica@exsample.com
+                  {userData.email}
                 </div>
               </div>
               <div className="d-flex justify-content-between align-items-center">
@@ -53,20 +71,28 @@ const MemberInfo = () => {
             <form>
               <div className="mb-5">
                 <label className="form-label text-gray-dark">姓名</label>
-                <div className="text-black fw-bold">Jessica Wang</div>
+                <div className="text-black fw-bold">{userData.name}</div>
               </div>
               <div className="mb-5">
                 <label className="form-label text-gray-dark">手機號碼</label>
-                <div className="text-black fw-bold">+886 912 345 678</div>
+                <div className="text-black fw-bold">{userData.phone}</div>
               </div>
               <div className="mb-5">
                 <label className="form-label text-gray-dark">生日</label>
-                <div className="text-black fw-bold">1990 年 8 月 15 日</div>
+                <div className="text-black fw-bold">
+                  {new Date(userData.birthday).toLocaleDateString(undefined, {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </div>
               </div>
               <div className="mb-7">
                 <label className="form-label text-gray-dark">地址</label>
                 <div className="text-black fw-bold">
-                  高雄市新興區六角路 123 號
+                  {userData.address?.zipcode} {userData.address?.county}
+                  {userData.address?.city}
+                  {userData.address?.detail}
                 </div>
               </div>
               <Button text="編輯" btnType="secondary" />
