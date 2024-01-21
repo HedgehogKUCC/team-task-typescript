@@ -3,6 +3,9 @@ export interface IApiUserUpdateData {
   name: string;
   phone: string;
   birthday: string;
+  birthdayYear: number | "";
+  birthdayMonth: number | "";
+  birthdayDate: number | "";
   address: {
     zipcode: number;
     detail: string;
