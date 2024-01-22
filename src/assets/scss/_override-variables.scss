@@ -101,6 +101,7 @@ $input-placeholder-color: $gray-600;
 
 $input-btn-padding-y: 1rem;
 $input-btn-padding-x: 1rem;
+$input-btn-border-width: 0;
 
 $form-check-input-width: 1.5em;
 $form-check-min-height: 1.5em;
@@ -123,7 +124,7 @@ $spacers: (
   11: $spacer * 3,
   12: $spacer * 4.5,
   13: $spacer * 12.5,
-  14: $spacer * 9,
+  14:  $spacer * 9,
 ) !default;
 
 $container-max-widths: (

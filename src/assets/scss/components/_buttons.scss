@@ -41,12 +41,6 @@
     &:hover {
       background-color: $primary-600;
     }
-
-    &:disabled {
-      color: $gray-600 !important;
-      background-color: $gray-400;
-      border-color: transparent;
-    }
   }
 
   &.cus_secondary_button {
@@ -57,11 +51,6 @@
       background-color: $primary-150;
       color: $primary-600;
       border-color: $primary-600;
-    }
-
-    &:disabled {
-      color: $gray-600;
-      border-color: $gray-600;
     }
   }
 }
