@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch } from "../store/hook";
 import { selectUser, setName, setToken } from "../store/slices/userSlice";
@@ -18,7 +18,6 @@ const Navbar = ({
 }: NavbarProps) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
-  const navigate = useNavigate();
 
   const localStorageName =
     localStorage.getItem("enjoyment_luxury_hotel_name") || "";
@@ -73,7 +72,6 @@ const Navbar = ({
     localStorage.removeItem("enjoyment_luxury_hotel_name");
     dispatch(setName(""));
     dispatch(setToken(""));
-    navigate("/", { replace: true });
   };
 
   return (
