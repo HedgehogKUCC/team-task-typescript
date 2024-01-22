@@ -116,8 +116,8 @@ const MemberInfo = () => {
   // 生日下拉選單資料
   const currentYear = new Date().getFullYear();
   const years = Array.from(
-    { length: currentYear - 1989 },
-    (_, index) => 1990 + index,
+    { length: currentYear - 1899 },
+    (_, index) => 1900 + index,
   );
   const months = Array.from({ length: 12 }, (_, index) => index + 1);
   const dates = Array.from({ length: 31 }, (_, index) => index + 1);
