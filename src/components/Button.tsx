@@ -3,16 +3,17 @@ type ButtonType = {
   btnType: BtnType;
   fit?: Fit;
   isDisabled?: boolean;
+  onClick?: () => void;
 };
 
 type BtnType = "primary" | "secondary" | "text";
 type Fit = "content" | "container";
 
-const Button = ({ text, btnType, isDisabled, fit }: ButtonType) => {
+const Button = ({ text, btnType, isDisabled, fit, onClick }: ButtonType) => {
   return (
     <>
       <button
-        type="button"
+        type="submit"
         className={`btn 
         ${
           btnType === "primary"
@@ -28,6 +29,7 @@ const Button = ({ text, btnType, isDisabled, fit }: ButtonType) => {
         ${fit === "container" ? "w-100" : ""}
         `}
         disabled={isDisabled}
+        onClick={onClick}
       >
         {text}
       </button>
