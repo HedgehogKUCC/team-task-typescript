@@ -1,17 +1,19 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { useEffect, useState } from "react";
 import CheckGreenIcon from "/ic_checkGreen.svg";
 import CheckIcon from "/ic_check_primary.svg";
 import LineIcon from "/ic_line.svg";
-import { useLocation } from "react-router-dom"; // 或者 '@reach/router'
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../store/hook";
 import { selectUser, setName, setToken } from "../store/slices/userSlice";
 import { selectOrder } from "../store/slices/orderSlice";
 const ReserveRoomSuccess = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
-  const order = useAppSelector(selectOrder);
+  const order = useAppSelector(selectOrder).result;
+  const orderUserInfo = order.userInfo;
+  const orderRoomInfo = order.roomId;
   const localStorageName =
     localStorage.getItem("enjoyment_luxury_hotel_name") || "";
   const localStorageToken =
@@ -25,14 +27,16 @@ const ReserveRoomSuccess = () => {
   if (!user.token && localStorageToken) {
     dispatch(setToken(UserToken));
   }
-  const location = useLocation();
-  const reserveData = location.state?.data;
 
+  const navigate = useNavigate();
   useEffect(() => {
-    console.log("order", order);
+    if (!order && user) {
+      //如果沒有order資料
+      //前往/reserve頁面
+      navigate("/reserve");
+    }
+  }, [order, navigate, user]);
 
-    console.log(reserveData);
-  }, [reserveData]);
   return (
     <>
       <Navbar isEscapeDocumentFlow={false} />
@@ -47,7 +51,6 @@ const ReserveRoomSuccess = () => {
                   alt="CheckGreenIcon"
                 />
                 <div>
-                  <p>{reserveData}</p>
                   <h2 className="fs-md-1 fs-3">恭喜，{UserName}！</h2>
                   <h2 className="fs-md-1 fs-3">您已預訂成功</h2>
                 </div>
@@ -77,15 +80,15 @@ const ReserveRoomSuccess = () => {
               <h3 className="fs-4 mb-7">訂房人資訊</h3>
               <div className="mb-5">
                 <p>姓名</p>
-                <p>Jessica Wang</p>
+                <p>{orderUserInfo.name}</p>
               </div>
               <div className="mb-5">
                 <p>手機號碼</p>
-                <p>+886 912 345 678</p>
+                <p>{orderUserInfo.phone}</p>
               </div>
               <div className="mb-5">
                 <p>電子信箱</p>
-                <p>jessica@sample.com</p>
+                <p>{orderUserInfo.email}</p>
               </div>
             </div>
             <div className="col text-black">
@@ -136,66 +139,23 @@ const ReserveRoomSuccess = () => {
                 </h4>
                 <div className=" rounded-8 bg-white d-flex flex-wrap gap-7">
                   <div className="row">
-                    <div className="col-4">
-                      <span className="d-flex align-items-center me-7">
-                        <img
-                          className="pe-2"
-                          src={CheckIcon}
-                          alt="Check Icon"
-                        />
-                        <p className="mb-0 text-nowrap fs-7">市景</p>
-                      </span>
-                    </div>
-                    <div className="col-4">
-                      <span className="d-flex align-items-center me-7">
-                        <img
-                          className="pe-2"
-                          src={CheckIcon}
-                          alt="Check Icon"
-                        />
-                        <p className="mb-0 text-nowrap fs-7">市景</p>
-                      </span>
-                    </div>
-                    <div className="col-4">
-                      <span className="d-flex align-items-center me-7">
-                        <img
-                          className="pe-2"
-                          src={CheckIcon}
-                          alt="Check Icon"
-                        />
-                        <p className="mb-0 text-nowrap fs-7">獨立衛浴</p>
-                      </span>
-                    </div>
-                    <div className="col-4">
-                      <span className="d-flex align-items-center me-7">
-                        <img
-                          className="pe-2"
-                          src={CheckIcon}
-                          alt="Check Icon"
-                        />
-                        <p className="mb-0 text-nowrap fs-7">市景</p>
-                      </span>
-                    </div>
-                    <div className="col-4">
-                      <span className="d-flex align-items-center me-7">
-                        <img
-                          className="pe-2"
-                          src={CheckIcon}
-                          alt="Check Icon"
-                        />
-                        <p className="mb-0 text-nowrap fs-7">獨立衛浴</p>
-                      </span>
-                    </div>
-                    <div className="col-4">
-                      <span className="d-flex align-items-center me-7">
-                        <img
-                          className="pe-2"
-                          src={CheckIcon}
-                          alt="Check Icon"
-                        />
-                        <p className="mb-0 text-nowrap fs-7">市景</p>
-                      </span>
-                    </div>
+                    {orderRoomInfo.facilityInfo.map(
+                      (item, index) =>
+                        item.isProvide && (
+                          <div className="col-4" key={index}>
+                            <span className="d-flex align-items-center me-7">
+                              <img
+                                className="pe-2"
+                                src={CheckIcon}
+                                alt="Check Icon"
+                              />
+                              <p className="mb-0 text-nowrap fs-7">
+                                {item.title}
+                              </p>
+                            </span>
+                          </div>
+                        ),
+                    )}
                   </div>
                 </div>
                 {/* 備品提供 */}
@@ -207,66 +167,23 @@ const ReserveRoomSuccess = () => {
                 </h4>
                 <div className=" rounded-8 bg-white d-flex flex-wrap gap-7">
                   <div className="row">
-                    <div className="col-4">
-                      <span className="d-flex align-items-center me-7">
-                        <img
-                          className="pe-2"
-                          src={CheckIcon}
-                          alt="Check Icon"
-                        />
-                        <p className="mb-0 text-nowrap fs-7">市景</p>
-                      </span>
-                    </div>
-                    <div className="col-4">
-                      <span className="d-flex align-items-center me-7">
-                        <img
-                          className="pe-2"
-                          src={CheckIcon}
-                          alt="Check Icon"
-                        />
-                        <p className="mb-0 text-nowrap fs-7">市景</p>
-                      </span>
-                    </div>
-                    <div className="col-4">
-                      <span className="d-flex align-items-center me-7">
-                        <img
-                          className="pe-2"
-                          src={CheckIcon}
-                          alt="Check Icon"
-                        />
-                        <p className="mb-0 text-nowrap fs-7">獨立衛浴</p>
-                      </span>
-                    </div>
-                    <div className="col-4">
-                      <span className="d-flex align-items-center me-7">
-                        <img
-                          className="pe-2"
-                          src={CheckIcon}
-                          alt="Check Icon"
-                        />
-                        <p className="mb-0 text-nowrap fs-7">市景</p>
-                      </span>
-                    </div>
-                    <div className="col-4">
-                      <span className="d-flex align-items-center me-7">
-                        <img
-                          className="pe-2"
-                          src={CheckIcon}
-                          alt="Check Icon"
-                        />
-                        <p className="mb-0 text-nowrap fs-7">獨立衛浴</p>
-                      </span>
-                    </div>
-                    <div className="col-4">
-                      <span className="d-flex align-items-center me-7">
-                        <img
-                          className="pe-2"
-                          src={CheckIcon}
-                          alt="Check Icon"
-                        />
-                        <p className="mb-0 text-nowrap fs-7">市景</p>
-                      </span>
-                    </div>
+                    {orderRoomInfo.amenityInfo.map(
+                      (item, index) =>
+                        item.isProvide && (
+                          <div className="col-4" key={index}>
+                            <span className="d-flex align-items-center me-7">
+                              <img
+                                className="pe-2"
+                                src={CheckIcon}
+                                alt="Check Icon"
+                              />
+                              <p className="mb-0 text-nowrap fs-7">
+                                {item.title}
+                              </p>
+                            </span>
+                          </div>
+                        ),
+                    )}
                   </div>
                 </div>
               </div>

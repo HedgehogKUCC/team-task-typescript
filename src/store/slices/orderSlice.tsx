@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../index";
 import { IOrder } from "../../api/interface/orders";
 
 const initialState: IOrder = {
@@ -46,13 +45,13 @@ export const orderSlice = createSlice({
   initialState,
   reducers: {
     setOrder: (state, action: PayloadAction<IOrder>) => {
-      state = action.payload;
+      Object.assign(state, action.payload);
     },
   },
 });
 
 export const { setOrder } = orderSlice.actions;
 
-export const selectOrder = (state: IOrder) => state;
+export const selectOrder = (state: { order: IOrder }) => state.order;
 
 export default orderSlice.reducer;

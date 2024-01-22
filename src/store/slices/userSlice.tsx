@@ -44,7 +44,6 @@ export const userSlice = createSlice({
     },
     setUserData: (state, action: PayloadAction<IApiUserLoginResponseData>) => {
       state.user = action.payload;
-      console.log(state.user);
     },
   },
 });

@@ -1,5 +1,5 @@
 import { useEffect, ReactNode } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { apiVerifyUserLogin } from './api/apiUser';
 import { apiGetUserData } from './api/apiUser';
 import { useAppDispatch } from "./store/hook";
@@ -10,7 +10,6 @@ interface ProtectRouteProps {
 }
 const ProtectRoute = ({ children }: ProtectRouteProps) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useAppDispatch();
   useEffect(() => {
 
@@ -35,7 +34,7 @@ const ProtectRoute = ({ children }: ProtectRouteProps) => {
 
     verifyUserLogin();
 
-  }, [location]); // 添加 location 到依賴數組
+  }, [navigate, dispatch]); // 添加 location 到依賴數組
 
   //如果用戶未通過認證，則將他們重定向到登錄頁面。
   //並將未通過認證的路由儲存為狀態，以便在用戶登錄後可以將他們重定向回來。

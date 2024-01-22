@@ -103,6 +103,7 @@ const ReserveRoom = () => {
     if (user.user) {
       const IuserData: IApiUserResult = user.user.result;
       const { name, phone, email, address } = IuserData;
+
       const data: IOderForm = {
         roomId: "6597f7f8c9e6ae814611a455", //可從路徑取得 或 存入store
         checkInDate: "2024/01/19", //存入store
@@ -113,9 +114,9 @@ const ReserveRoom = () => {
             zipcode: address.zipcode,
             detail: address.detail,
           },
-          name: name,
-          phone: phone,
-          email: email,
+          name,
+          phone,
+          email,
         },
       };
       setPostData(data);
@@ -127,13 +128,8 @@ const ReserveRoom = () => {
       setValue("userInfo.email", email);
       setValue("userInfo.address.detail", address.detail);
       setZipcode(address.zipcode);
-      const formCity = ZipCodeMap.find(
-        (item) => item.zipcode === address.zipcode,
-      );
-      if (formCity) {
-        setSelectCity(formCity.city);
-        setSelectCounty(formCity.county);
-      }
+      setSelectCity(address.city);
+      setSelectCounty(address.county);
       //套用會員資料 並設定表單資料 --end
     } else {
       return;
@@ -142,11 +138,8 @@ const ReserveRoom = () => {
 
   //送出訂單
   const onSubmit: SubmitHandler<IOderForm> = (data) => {
-    console.log("isApplyUserData", isApplyUserData);
-
     setLoading(true);
     if (isApplyUserData) {
-      console.log("isApplyUserData && postData");
       if (postData)
         //當使用套用會員資料時，postData 已經有資料，直接送出
         apiAddOrder(postData).then((res) => {
@@ -174,9 +167,9 @@ const ReserveRoom = () => {
       setPostData(postForm);
       if (postForm) {
         apiAddOrder(postForm).then((res) => {
-          if (res && submitCallbackData) {
+          if (res) {
             setSubmitCallbackData(res);
-            console.log("submitCallbackData", submitCallbackData);
+            dispatch(setOrder(res));
           }
         });
       }
@@ -204,10 +197,6 @@ const ReserveRoom = () => {
   //當表單資料與postData不同時，將isApplyUserData 設為false
   //，避免使用者修改表單資料後，再次套用會員資料
   useEffect(() => {
-    console.log("formValues", formValues.userInfo);
-    console.log("postData", postData?.userInfo);
-    console.log("submitCallbackData", submitCallbackData);
-
     if (formValues.userInfo !== postData?.userInfo) {
       setIsApplyUserData(false);
     } else {
