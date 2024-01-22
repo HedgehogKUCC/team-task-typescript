@@ -1,6 +1,5 @@
 import axios from "axios";
 import interceptorRequest from "./utils/interceptorRequest";
-import { IApiUserUpdateData } from "./interface/user.ts";
 
 const API_BASE_URL = "https://freyja-8dr3.onrender.com/api";
 
@@ -45,8 +44,6 @@ export const apiUserForgotPassword = (data: {
   newPassword: string;
 }) => userRequest.post("/forgot", data);
 export const apiUserData = () => userRequest.get("/");
-export const apiUserUpdate = (data: IApiUserUpdateData) =>
-  userRequest.put("/", data);
 
 // Verify - 驗證
 export const apiVerifyEmail = (data: { email: string }) =>
