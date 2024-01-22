@@ -189,6 +189,7 @@ const MemberInfo = () => {
                     }`}
                     id="oldPassword"
                     placeholder="請輸入舊密碼"
+                    autoComplete="current-password"
                     {...register("oldPassword", {
                       required: {
                         value: true,
@@ -218,6 +219,7 @@ const MemberInfo = () => {
                     }`}
                     id="newPassword"
                     placeholder="請輸入新密碼"
+                    autoComplete="new-password"
                     {...register("newPassword", {
                       required: {
                         value: true,
@@ -251,6 +253,7 @@ const MemberInfo = () => {
                     }`}
                     id="checkNewPassword"
                     placeholder="請再輸入一次新密碼"
+                    autoComplete="new-password"
                     {...register("checkNewPassword", {
                       required: {
                         value: true,
