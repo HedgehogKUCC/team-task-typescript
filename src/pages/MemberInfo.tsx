@@ -148,6 +148,7 @@ const MemberInfo = () => {
         setValue("address.city", "");
         setCityList();
       }
+      console.log(value);
     });
     return () => subscription.unsubscribe();
   }, [setValue, watch]);
