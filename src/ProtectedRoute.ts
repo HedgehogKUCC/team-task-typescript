@@ -16,7 +16,7 @@ const ProtectRoute = ({ children }: ProtectRouteProps) => {
     const verifyUserLogin = async () => {
       const data = await apiVerifyUserLogin();
       if (!data) {
-        navigate("/login");
+        navigate("/login", { replace: true }); // 重定向到登錄頁面 replace: true 代表不會在 history 中留下記錄
         return null;
       } else {
         const getUserData = async () => {
