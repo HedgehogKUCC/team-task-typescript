@@ -1,11 +1,11 @@
 import { isResponseOK, $http, asyncDo } from "../api/http";
-import type { IOrders, IOderForm } from "./interface/orders";
+import type { IOrder, IOderForm } from "./interface/orders";
 /**
  * 
  * 取得訂單列表
  */
 export const apiGetOrders = async () => {
-    const [response, error] = await asyncDo($http<IOrders>("get", "/orders"));
+    const [response, error] = await asyncDo($http<IOrder>("get", "/orders"));
     if (!isResponseOK(error, response)) {
         return null;
     }
@@ -17,7 +17,7 @@ export const apiGetOrders = async () => {
  * 取得單一訂單
  */
 export const apiGetOrder = async (id: string) => {
-    const [response, error] = await asyncDo($http<IOrders>("get", `/orders/${id}`));
+    const [response, error] = await asyncDo($http<IOrder>("get", `/orders/${id}`));
     if (!isResponseOK(error, response)) {
         return null;
     }
@@ -30,7 +30,7 @@ export const apiGetOrder = async (id: string) => {
  * 新增訂單
  */
 export const apiAddOrder = async (data: IOderForm) => {
-    const [response, error] = await asyncDo($http<IOrders>("post", "/orders", data));
+    const [response, error] = await asyncDo($http<IOrder>("post", "/orders", data));
     if (!isResponseOK(error, response)) {
         return null;
     }
@@ -43,7 +43,7 @@ export const apiAddOrder = async (data: IOderForm) => {
  */
 
 export const apiDeleteOrder = async (id: string) => {
-    const [response, error] = await asyncDo($http<IOrders>("delete", `/orders/${id}`));
+    const [response, error] = await asyncDo($http<IOrder>("delete", `/orders/${id}`));
     if (!isResponseOK(error, response)) {
         return null;
     }

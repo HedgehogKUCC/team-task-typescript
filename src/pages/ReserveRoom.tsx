@@ -14,7 +14,7 @@ import React, { useEffect } from "react";
 import { apiGetRoom } from "../api/apiRoom";
 import { apiAddOrder } from "../api/apiOrder";
 import type { Room } from "../api/interface/room";
-import type { IOderForm, Order } from "../api/interface/orders";
+import type { IOderForm } from "../api/interface/orders";
 import type { IApiUserResult } from "../api/interface/user";
 import { useAppSelector } from "../store/hook";
 import { selectUser } from "../store/slices/userSlice";
@@ -52,7 +52,6 @@ const ReserveRoom = () => {
   const [roomData, setRoomData] = useState<Room>();
   const [postData, setPostData] = useState<IOderForm>();
   const [isApplyUserData, setIsApplyUserData] = useState<boolean>(false); //是否套用會員資料
-  const [submitCallbackData, setSubmitCallbackData] = useState<Order>(); //送出表單後的回傳資料
   const user = useAppSelector(selectUser);
 
   const countyArray = ZipCodes.map((item) => item.county);
@@ -168,7 +167,6 @@ const ReserveRoom = () => {
       if (postForm) {
         apiAddOrder(postForm).then((res) => {
           if (res) {
-            setSubmitCallbackData(res);
             dispatch(setOrder(res));
           }
         });
@@ -202,7 +200,7 @@ const ReserveRoom = () => {
     } else {
       setIsApplyUserData(true);
     }
-  }, [formValues, postData, loading, isApplyUserData, submitCallbackData]);
+  }, [formValues, postData, loading, isApplyUserData]);
   return (
     <>
       <Navbar isEscapeDocumentFlow={false} />
