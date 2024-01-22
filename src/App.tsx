@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { store } from "./store";
 import { Provider } from "react-redux";
-
+import ProtectedRoute from "./ProtectedRoute";
 import MemberLayout from "./components/MemberLayout";
 import LoginSignUpLayout from "./components/LoginSignUpLayout";
 import {
@@ -34,10 +34,21 @@ const App = () => {
             </Route>
             <Route path="/room" element={<Room />}></Route>
             <Route path="/room_detail" element={<RoomDetail />}></Route>
-            <Route path="/reserve" element={<ReserveRoom />}></Route>
+            <Route
+              path="/reserve"
+              element={
+                <ProtectedRoute>
+                  <ReserveRoom />
+                </ProtectedRoute>
+              }
+            ></Route>
             <Route
               path="/reserve_success"
-              element={<ReserveRoomSuccess />}
+              element={
+                <ProtectedRoute>
+                  <ReserveRoomSuccess />
+                </ProtectedRoute>
+              }
             ></Route>
             <Route path="/member" element={<MemberLayout />}>
               <Route index element={<Navigate to="info" replace />}></Route>

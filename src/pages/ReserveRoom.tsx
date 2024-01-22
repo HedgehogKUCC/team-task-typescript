@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SizeIcon from "/ic_Size.svg";
 import BedIcon from "/ic_Bed.svg";
 import PersonIcon from "/ic_Person.svg";
@@ -9,15 +9,19 @@ import ZipCodes from "../utils/zipcodes";
 import { useState } from "react";
 import ZipCodeMap from "../utils/zipcodes";
 import { useForm, SubmitHandler } from "react-hook-form";
-// import LoadingModal from "../components/ReserveLoadingModal";
+import LoadingModal from "../components/ReserveLoadingModal";
+import React, { useEffect } from "react";
+import { apiGetRoom } from "../api/apiRoom";
+import { apiAddOrder } from "../api/apiOrder";
+import type { Room } from "../api/interface/room";
+import type { IOderForm } from "../api/interface/orders";
+import type { IApiUserResult } from "../api/interface/user";
+import { useAppSelector } from "../store/hook";
+import { selectUser } from "../store/slices/userSlice";
+import { setOrder } from "../store/slices/orderSlice";
+import { useAppDispatch } from "../store/hook";
 
 const ReserveRoom = () => {
-  // interface ZipCodes {
-  //   detail: string;
-  //   zipcode: number;
-  //   county: string;
-  //   city: string;
-  // }
   interface Address {
     zipcode: number;
     detail: string;
@@ -37,16 +41,23 @@ const ReserveRoom = () => {
     peopleNum: number;
     userInfo: UserInfo;
   }
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [selectCounty, setSelectCounty] = useState<string>(""); //選擇縣市
   const [selectCity, setSelectCity] = useState<string>(""); //選擇區域
   const [cities, setCities] = useState<string[]>([]); //區域資料
   const [selectZipcode, setZipcode] = useState<number>(); //郵遞區號
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [roomData, setRoomData] = useState<Room>();
+  const [postData, setPostData] = useState<IOderForm>();
+  const [isApplyUserData, setIsApplyUserData] = useState<boolean>(false); //是否套用會員資料
+  const user = useAppSelector(selectUser);
 
   const countyArray = ZipCodes.map((item) => item.county);
   const allCounty = Array.from(new Set(countyArray));
 
+  //選擇縣市後，取得區域資料
   const handleChangeCounty = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectCounty(e.target.value);
     const cities: string[] = [];
@@ -59,6 +70,7 @@ const ReserveRoom = () => {
     });
   };
 
+  //選擇區域後，取得郵遞區號
   const handleChangeCity = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectCity(e.target.value);
     if (selectCounty) {
@@ -70,43 +82,132 @@ const ReserveRoom = () => {
       }
     }
   };
-  const onSubmit: SubmitHandler<IFormInputs> = (data) => {
-    //post /api_v1_orders新增訂單
-    const postData: IFormInputs = {
-      roomId: "65251f6095429cd58654bf12", //可從路徑取得 或 存入store
-      checkInDate: "2021/06/10", //存入store
-      checkOutDate: "2021/06/11", // 存入store
-      peopleNum: 2, //存入store
-      userInfo: {
-        address: {
-          zipcode: selectZipcode ? selectZipcode : 0,
-          detail: data.userInfo.address.detail,
-        },
-        name: data.userInfo.name,
-        phone: data.userInfo.phone,
-        email: data.userInfo.email,
-      },
-    };
-    console.log("postData", postData);
+
+  //取得房間資料
+  const getRoomData = async () => {
+    const res = await apiGetRoom("6597f7f8c9e6ae814611a455");
+    if (res) {
+      setRoomData(res.result);
+    }
   };
+
+  useEffect(() => {
+    getRoomData();
+  }, []);
+
+  //套用會員資料
+  const setUserData = () => {
+    //當使用套用會員資料時，將會員資料存入postData 主要用於送出訂單 --start
+    setIsApplyUserData(true);
+    if (user.user) {
+      const IuserData: IApiUserResult = user.user.result;
+      const { name, phone, email, address } = IuserData;
+
+      const data: IOderForm = {
+        roomId: "6597f7f8c9e6ae814611a455", //可從路徑取得 或 存入store
+        checkInDate: "2024/01/19", //存入store
+        checkOutDate: "2024/01/20", // 存入store
+        peopleNum: 2, //存入store
+        userInfo: {
+          address: {
+            zipcode: address.zipcode,
+            detail: address.detail,
+          },
+          name,
+          phone,
+          email,
+        },
+      };
+      setPostData(data);
+      //當使用套用會員資料時，將會員資料存入postData 主要用於送出訂單 --end
+
+      //套用會員資料 並設定表單資料 主要用於顯示 --start
+      setValue("userInfo.name", name);
+      setValue("userInfo.phone", phone);
+      setValue("userInfo.email", email);
+      setValue("userInfo.address.detail", address.detail);
+      setZipcode(address.zipcode);
+      setSelectCity(address.city);
+      setSelectCounty(address.county);
+      //套用會員資料 並設定表單資料 --end
+    } else {
+      return;
+    }
+  };
+
+  //送出訂單
+  const onSubmit: SubmitHandler<IOderForm> = (data) => {
+    setLoading(true);
+    if (isApplyUserData) {
+      if (postData)
+        //當使用套用會員資料時，postData 已經有資料，直接送出
+        apiAddOrder(postData).then((res) => {
+          if (res) {
+            dispatch(setOrder(res));
+          }
+        });
+    } else {
+      //當沒有使用套用會員資料時，postData 為空，需自行填寫資料後送出
+      const postForm: IOderForm = {
+        roomId: "6597f7f8c9e6ae814611a455", //可從路徑取得 或 存入store
+        checkInDate: "2024/01/19", //存入store
+        checkOutDate: "2024/01/20", // 存入store
+        peopleNum: 2, //存入store
+        userInfo: {
+          address: {
+            zipcode: selectZipcode ? selectZipcode : 0,
+            detail: data.userInfo.address.detail,
+          },
+          name: data.userInfo.name,
+          phone: data.userInfo.phone,
+          email: data.userInfo.email,
+        },
+      };
+      setPostData(postForm);
+      if (postForm) {
+        apiAddOrder(postForm).then((res) => {
+          if (res) {
+            dispatch(setOrder(res));
+          }
+        });
+      }
+    }
+    //3秒後跳轉至訂單成功頁面 並清空postData 與 loading
+    setTimeout(() => {
+      //傳遞訂單資料至訂單成功頁面
+      navigate("/reserve_success");
+      setPostData(undefined);
+      setLoading(false);
+    }, 3000);
+  };
+
   const {
     register,
     formState: { errors },
+    setValue,
     handleSubmit,
+    watch,
   } = useForm<IFormInputs>();
-  //
-  // const log = () => {
-  //   console.log('selectZipcode', selectZipcode);
-  // };
 
+  //formValues 為表單資料
+  const formValues = watch();
+
+  //當表單資料與postData不同時，將isApplyUserData 設為false
+  //，避免使用者修改表單資料後，再次套用會員資料
+  useEffect(() => {
+    if (formValues.userInfo !== postData?.userInfo) {
+      setIsApplyUserData(false);
+    } else {
+      setIsApplyUserData(true);
+    }
+  }, [formValues, postData, loading, isApplyUserData]);
   return (
     <>
       <Navbar isEscapeDocumentFlow={false} />
       <section className="bg_primary_10 text-black py-7 py-md-9">
         <div className="container">
-          {/*
-            <LoadingModal isLoading={loading} />
-          */}
+          <LoadingModal isLoading={loading} />
+
           <div className="d-flex align-items-center  mb-7">
             <Link to="/">
               <i
@@ -132,9 +233,12 @@ const ReserveRoom = () => {
                   >
                     選擇房型
                   </h4>
-                  <p>尊爵雙人房</p>
+                  <p>景觀雙人房</p>
                 </div>
-                <button className="fw-bold btn text-decoration-underline">
+                <button
+                  type="button"
+                  className="fw-bold btn text-decoration-underline"
+                >
                   編輯
                 </button>
               </div>
@@ -150,7 +254,10 @@ const ReserveRoom = () => {
                   <p className="mb-0">入住：6 月 10 日星期二</p>
                   <p>退房：6 月 11 日星期三</p>
                 </div>
-                <button className="fw-bold btn text-decoration-underline">
+                <button
+                  type="button"
+                  className="fw-bold btn text-decoration-underline"
+                >
                   編輯
                 </button>
               </div>
@@ -165,7 +272,10 @@ const ReserveRoom = () => {
                   </h4>
                   <p className="mb-0">2 人</p>
                 </div>
-                <button className="fw-bold btn text-decoration-underline">
+                <button
+                  type="button"
+                  className="fw-bold btn text-decoration-underline"
+                >
                   編輯
                 </button>
               </div>
@@ -177,7 +287,11 @@ const ReserveRoom = () => {
               {/* 訂房人資訊 */}
               <div className="d-flex justify-content-between align-items-center mb-7">
                 <h3 className="fw-bold fs-28">訂房人資訊</h3>
-                <button className="btn text-decoration-underline text-primary">
+                <button
+                  type="button"
+                  className="btn text-decoration-underline text-primary"
+                  onClick={setUserData}
+                >
                   套用會員資料
                 </button>
               </div>
@@ -274,9 +388,10 @@ const ReserveRoom = () => {
                       value={selectCounty}
                       onChange={handleChangeCounty}
                     >
-                      <option value="" disabled>
-                        -- 請選擇縣市 --
-                      </option>
+                      {!postData && <option value="">-- 請選擇縣市 --</option>}
+                      {postData && (
+                        <option value={selectCounty}>{selectCounty}</option>
+                      )}
                       {allCounty.map((item, index) => (
                         <option key={index} value={item}>
                           {item}
@@ -290,9 +405,10 @@ const ReserveRoom = () => {
                       value={selectCity}
                       onChange={handleChangeCity}
                     >
-                      <option value="" disabled>
-                        -- 請選擇地區 --
-                      </option>
+                      {!postData && <option value="">-- 請選擇地區 --</option>}
+                      {postData && (
+                        <option value={selectCity}>{selectCity}</option>
+                      )}
                       {cities.map((city, index) => (
                         <option key={index} value={city}>
                           {city}
@@ -344,7 +460,7 @@ const ReserveRoom = () => {
                       alt="Size Icon"
                       style={{ fontSize: "24px" }}
                     />
-                    <p className="fw-bold">24坪</p>
+                    <p className="fw-bold">{roomData?.areaInfo}</p>
                   </div>
                   <div className=" rounded-8 bg-white p-3 me-3 square_97">
                     <img
@@ -353,7 +469,7 @@ const ReserveRoom = () => {
                       alt="Bed Icon"
                       style={{ fontSize: "24px" }}
                     />
-                    <p className="fw-bold">1張大床</p>
+                    <p className="fw-bold">{roomData?.bedInfo}</p>
                   </div>
                   <div className=" rounded-8 bg-white p-3 square_97">
                     <img
@@ -362,7 +478,7 @@ const ReserveRoom = () => {
                       alt="Person Icon"
                       style={{ fontSize: "24px" }}
                     />
-                    <p className="fw-bold">2-4 人</p>
+                    <p className="fw-bold">1-{roomData?.maxPeople}人</p>
                   </div>
                 </div>
                 <h4
@@ -401,27 +517,23 @@ const ReserveRoom = () => {
                   房內設備
                 </h4>
                 <div className=" rounded-8 bg-white p-4 d-flex flex-wrap gap-2">
-                  <span
-                    className="d-flex align-items-center me-7"
-                    style={{ width: "100px" }}
-                  >
-                    <img className="pe-2" src={CheckIcon} alt="Check Icon" />
-                    <p className="mb-0">平面電視</p>
-                  </span>
-                  <span
-                    className="d-flex align-items-center me-7"
-                    style={{ width: "100px" }}
-                  >
-                    <img className="pe-2" src={CheckIcon} alt="Check Icon" />
-                    <p className="mb-0">吹風機</p>
-                  </span>
-                  <span
-                    className="d-flex align-items-center me-7"
-                    style={{ width: "100px" }}
-                  >
-                    <img className="pe-2" src={CheckIcon} alt="Check Icon" />
-                    <p className="mb-0">冰箱</p>
-                  </span>
+                  {roomData?.facilityInfo.map(
+                    (item, index) =>
+                      item.isProvide && (
+                        <span
+                          className="d-flex align-items-center me-7"
+                          style={{ width: "100px" }}
+                          key={index}
+                        >
+                          <img
+                            className="pe-2"
+                            src={CheckIcon}
+                            alt="Check Icon"
+                          />
+                          <p className="mb-0">{item.title}</p>
+                        </span>
+                      ),
+                  )}
                 </div>
                 <h4
                   className="fw-bold fs-6 border-left-primary-4 my-4"
@@ -431,41 +543,23 @@ const ReserveRoom = () => {
                 </h4>
 
                 <div className=" rounded-8 bg-white p-4 d-flex flex-wrap gap-2">
-                  <span
-                    className="d-flex align-items-center me-7"
-                    style={{ width: "100px" }}
-                  >
-                    <img className="pe-2" src={CheckIcon} alt="Check Icon" />
-                    <p className="mb-0">衛生紙</p>
-                  </span>
-                  <span
-                    className="d-flex align-items-center me-7"
-                    style={{ width: "100px" }}
-                  >
-                    <img className="pe-2" src={CheckIcon} alt="Check Icon" />
-                    <p className="mb-0">拖鞋</p>
-                  </span>
-                  <span
-                    className="d-flex align-items-center me-7"
-                    style={{ width: "100px" }}
-                  >
-                    <img className="pe-2" src={CheckIcon} alt="Check Icon" />
-                    <p className="mb-0">沐浴用品</p>
-                  </span>
-                  <span
-                    className="d-flex align-items-center me-7"
-                    style={{ width: "100px" }}
-                  >
-                    <img className="pe-2" src={CheckIcon} alt="Check Icon" />
-                    <p className="mb-0">拖鞋</p>
-                  </span>
-                  <span
-                    className="d-flex align-items-center me-7"
-                    style={{ width: "100px" }}
-                  >
-                    <img className="pe-2" src={CheckIcon} alt="Check Icon" />
-                    <p className="mb-0">拖鞋</p>
-                  </span>
+                  {roomData?.amenityInfo.map(
+                    (item, index) =>
+                      item.isProvide && (
+                        <span
+                          className="d-flex align-items-center me-7"
+                          style={{ width: "100px" }}
+                          key={index}
+                        >
+                          <img
+                            className="pe-2"
+                            src={CheckIcon}
+                            alt="Check Icon"
+                          />
+                          <p className="mb-0">{item.title}</p>
+                        </span>
+                      ),
+                  )}
                 </div>
               </div>
             </div>
@@ -473,7 +567,7 @@ const ReserveRoom = () => {
               <div className="rounded-20 p-7 bg-white">
                 <img
                   className="object-fit-cover mb-7 rounded-8"
-                  src="https://raw.githubusercontent.com/hexschool/2022-web-layout-training/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/room1.png"
+                  src={roomData?.imageUrl}
                   alt="room"
                 />
                 <h4 className="fs-28 fw-bold">價格詳情</h4>
