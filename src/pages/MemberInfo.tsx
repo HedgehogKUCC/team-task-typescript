@@ -143,12 +143,11 @@ const MemberInfo = () => {
   setCityList();
 
   useEffect(() => {
-    const subscription = watch((value, { name }) => {
+    const subscription = watch((_, { name }) => {
       if (name === "address.county") {
         setValue("address.city", "");
         setCityList();
       }
-      console.log(value);
     });
     return () => subscription.unsubscribe();
   }, [setValue, watch]);
