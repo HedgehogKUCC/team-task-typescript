@@ -45,7 +45,7 @@ const MemberInfo = () => {
 
   // 修改資料
   const [isPasswordEditMode, setIsPasswordEditMode] = useState(false);
-  const [isOtherDataEditMode, setIsOtherDataEditMode] = useState(true);
+  const [isOtherDataEditMode, setIsOtherDataEditMode] = useState(false);
 
   const {
     register,
@@ -164,7 +164,7 @@ const MemberInfo = () => {
             <h5 className="text-black fw-bold mb-5 mb-sm-7">修改密碼</h5>
             {isPasswordEditMode ? (
               // 編輯表單
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form>
                 {/* 電子信箱 */}
                 <div className="mb-3 mb-sm-5">
                   <label className="form-label text-gray-dark">電子信箱</label>
@@ -271,6 +271,7 @@ const MemberInfo = () => {
                   text="儲存設定"
                   btnType="primary"
                   isDisabled={!isValid}
+                  onClick={handleSubmit(onSubmit)}
                 />
               </form>
             ) : (
@@ -307,7 +308,7 @@ const MemberInfo = () => {
             <h5 className="text-black fw-bold mb-5 mb-sm-7">基本資料</h5>
             {isOtherDataEditMode ? (
               // 編輯表單
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form>
                 {/* 姓名 */}
                 <div className="mb-3 mb-sm-5">
                   <label
@@ -547,6 +548,7 @@ const MemberInfo = () => {
                   text="儲存設定"
                   btnType="primary"
                   isDisabled={!isValid}
+                  onClick={handleSubmit(onSubmit)}
                 />
               </form>
             ) : (
