@@ -143,10 +143,18 @@ const MemberInfo = () => {
   setCityList();
 
   useEffect(() => {
-    const subscription = watch((_, { name }) => {
+    const subscription = watch((value, { name }) => {
       if (name === "address.county") {
         setValue("address.city", "");
         setCityList();
+      }
+      if (name === "address.city") {
+        const zipcode = ZipCodeMap.find(
+          (item) => item.city === value.address?.city,
+        )?.zipcode;
+        if (typeof zipcode === "number") {
+          setValue("address.zipcode", zipcode);
+        }
       }
     });
     return () => subscription.unsubscribe();
