@@ -83,9 +83,6 @@ const MemberInfo = () => {
       return;
     }
 
-    // 將年月日欄位寫回 birthday 參數
-    data.birthday = `${data.birthdayYear}/${data.birthdayMonth}/${data.birthdayDate}`;
-
     (async () => {
       try {
         const res = await apiUserUpdate(data);
@@ -155,6 +152,16 @@ const MemberInfo = () => {
         if (typeof zipcode === "number") {
           setValue("address.zipcode", zipcode);
         }
+      }
+      if (
+        name === "birthdayYear" ||
+        name === "birthdayMonth" ||
+        name === "birthdayDate"
+      ) {
+        setValue(
+          "birthday",
+          `${value.birthdayYear}/${value.birthdayMonth}/${value.birthdayDate}`,
+        );
       }
     });
     return () => subscription.unsubscribe();
