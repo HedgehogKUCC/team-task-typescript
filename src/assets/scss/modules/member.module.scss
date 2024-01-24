@@ -1,5 +1,6 @@
 @import "../index";
 
+// Member Layout
 .member_header {
   position: relative;
   background-image: url("https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/hero.png?raw=true");
@@ -41,5 +42,52 @@
   .member_header {
     background-image: url("https://images.unsplash.com/photo-1606744837616-56c9a5c6a6eb?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
     padding: 40px 0;
+  }
+}
+
+// Member Order
+.deco_title {
+  display: flex;
+
+  &::before {
+    content: "";
+    display: block;
+    width: 4px;
+    height: 24px;
+    border-radius: 10px;
+    background-color: $primary;
+    margin-right: 12px;
+  }
+
+  &_green {
+    display: flex;
+
+    &::before {
+      content: "";
+      display: block;
+      width: 4px;
+      height: 24px;
+      border-radius: 10px;
+      background-color: $gray-600;
+      margin-right: 12px;
+    }
+  }
+}
+
+.order_picture {
+  height: 240px;
+}
+
+.order_subtitle {
+  font-size: 20px;
+}
+
+@media screen and (max-width: 576px) {
+  .order_picture {
+    height: 150px;
+  }
+
+  .order_subtitle {
+    font-size: 16px;
   }
 }

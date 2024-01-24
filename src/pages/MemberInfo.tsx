@@ -83,9 +83,6 @@ const MemberInfo = () => {
       return;
     }
 
-    // 將年月日欄位寫回 birthday 參數
-    data.birthday = `${data.birthdayYear}/${data.birthdayMonth}/${data.birthdayDate}`;
-
     (async () => {
       try {
         const res = await apiUserUpdate(data);
@@ -143,10 +140,28 @@ const MemberInfo = () => {
   setCityList();
 
   useEffect(() => {
-    const subscription = watch((_, { name }) => {
+    const subscription = watch((value, { name }) => {
       if (name === "address.county") {
         setValue("address.city", "");
         setCityList();
+      }
+      if (name === "address.city") {
+        const zipcode = ZipCodeMap.find(
+          (item) => item.city === value.address?.city,
+        )?.zipcode;
+        if (typeof zipcode === "number") {
+          setValue("address.zipcode", zipcode);
+        }
+      }
+      if (
+        name === "birthdayYear" ||
+        name === "birthdayMonth" ||
+        name === "birthdayDate"
+      ) {
+        setValue(
+          "birthday",
+          `${value.birthdayYear}/${value.birthdayMonth}/${value.birthdayDate}`,
+        );
       }
     });
     return () => subscription.unsubscribe();
