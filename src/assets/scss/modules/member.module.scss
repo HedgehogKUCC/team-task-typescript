@@ -73,3 +73,21 @@
     }
   }
 }
+
+.order_picture {
+  height: 240px;
+}
+
+.order_subtitle {
+  font-size: 20px;
+}
+
+@media screen and (max-width: 576px) {
+  .order_picture {
+    height: 150px;
+  }
+
+  .order_subtitle {
+    font-size: 16px;
+  }
+}

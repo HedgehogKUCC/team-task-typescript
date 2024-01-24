@@ -1,3 +1,5 @@
+import Button from "../components/Button";
+
 import styles from "../assets/scss/modules/member.module.scss";
 
 const MemberOrder = () => {
@@ -7,24 +9,27 @@ const MemberOrder = () => {
         {/* 即將來的行程 */}
         <div className="col-12 col-md-7">
           <div
-            className="bg-white p-5 p-sm-6 p-md-7 mb-5"
+            className="bg-white p-3 p-sm-5 p-sm-6 p-md-7 mb-5"
             style={{ borderRadius: "20px" }}
           >
-            <p className="mb-2 text-gray-dark">
+            <p className="mb-2 fs-7 text-gray-dark">
               預訂參考編號： HH2302183151222
             </p>
             <h5 className="text-black fw-bold mb-0">即將來的行程</h5>
             <picture
-              className="d-flex align-items-center my-7 overflow-hidden"
-              style={{ height: "240px", borderRadius: "8px" }}
+              className={`d-flex align-items-center my-5 my-sm-7 overflow-hidden ${styles.order_picture}`}
+              style={{ borderRadius: "8px" }}
             >
               <img
                 src="https://github.com/hexschool/2022-web-layout-training/blob/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/room2-1.png?raw=true"
-                className="img-fluid "
+                className="w-100 h-100"
+                style={{ objectFit: "cover" }}
                 alt="尊爵雙人房"
               />
             </picture>
-            <h6 className="text-gray-dark fw-bold mb-5">
+            <h6
+              className={`text-gray-dark fw-bold mb-5 ${styles.order_subtitle}`}
+            >
               <span
                 className="pe-3"
                 style={{ borderRight: "solid 1px #909090" }}
@@ -34,21 +39,21 @@ const MemberOrder = () => {
               <span className="ps-3">住宿人數：2 位</span>
             </h6>
             <div className="mb-5">
-              <p className={`text-gray-dark mb-2 ${styles.deco_title}`}>
+              <p className={`text-gray-dark fs-7 mb-2 ${styles.deco_title}`}>
                 入住：6 月 10 日星期二，15:00 可入住
               </p>
-              <p className={`text-gray-dark ${styles.deco_title_green}`}>
+              <p className={`text-gray-dark fs-7 ${styles.deco_title_green}`}>
                 退房：6 月 11 日星期三，12:00 前退房
               </p>
             </div>
-            <p className="text-gray-dark fw-bold">NT$ 10,000</p>
+            <p className="text-gray-dark fs-7 fw-bold mb-0">NT$ 10,000</p>
             <hr
-              className="my-7"
+              className="my-5 my-sm-7"
               style={{ borderTop: "solid 1px #ECECEC", opacity: 1 }}
             />
 
             {/* 房內設備 */}
-            <div className="mb-7">
+            <div className="mb-5 mb-sm-7">
               <div className={`text-black fw-bold mb-5 ${styles.deco_title}`}>
                 房內設備
               </div>
@@ -115,7 +120,7 @@ const MemberOrder = () => {
             </div>
 
             {/* 備品提供 */}
-            <div className="mb-7">
+            <div className="mb-5 mb-sm-7">
               <div className={`text-black fw-bold mb-5 ${styles.deco_title}`}>
                 備品提供
               </div>
@@ -178,6 +183,15 @@ const MemberOrder = () => {
                     除濕機
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <div className="row gx-3">
+              <div className="col-6">
+                <Button text="取消預定" btnType="secondary" fit="container" />
+              </div>
+              <div className="col-6">
+                <Button text="查看詳情" btnType="primary" fit="container" />
               </div>
             </div>
           </div>
