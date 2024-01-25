@@ -45,7 +45,7 @@ const MemberInfo = () => {
 
   // 修改資料
   const [isPasswordEditMode, setIsPasswordEditMode] = useState(false);
-  const [isOtherDataEditMode, setIsOtherDataEditMode] = useState(true);
+  const [isOtherDataEditMode, setIsOtherDataEditMode] = useState(false);
 
   const {
     register,
@@ -82,9 +82,6 @@ const MemberInfo = () => {
       });
       return;
     }
-
-    // 將年月日欄位寫回 birthday 參數
-    data.birthday = `${data.birthdayYear}/${data.birthdayMonth}/${data.birthdayDate}`;
 
     (async () => {
       try {
@@ -143,10 +140,28 @@ const MemberInfo = () => {
   setCityList();
 
   useEffect(() => {
-    const subscription = watch((_, { name }) => {
+    const subscription = watch((value, { name }) => {
       if (name === "address.county") {
         setValue("address.city", "");
         setCityList();
+      }
+      if (name === "address.city") {
+        const zipcode = ZipCodeMap.find(
+          (item) => item.city === value.address?.city,
+        )?.zipcode;
+        if (typeof zipcode === "number") {
+          setValue("address.zipcode", zipcode);
+        }
+      }
+      if (
+        name === "birthdayYear" ||
+        name === "birthdayMonth" ||
+        name === "birthdayDate"
+      ) {
+        setValue(
+          "birthday",
+          `${value.birthdayYear}/${value.birthdayMonth}/${value.birthdayDate}`,
+        );
       }
     });
     return () => subscription.unsubscribe();
@@ -164,7 +179,7 @@ const MemberInfo = () => {
             <h5 className="text-black fw-bold mb-5 mb-sm-7">修改密碼</h5>
             {isPasswordEditMode ? (
               // 編輯表單
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form>
                 {/* 電子信箱 */}
                 <div className="mb-3 mb-sm-5">
                   <label className="form-label text-gray-dark">電子信箱</label>
@@ -271,6 +286,7 @@ const MemberInfo = () => {
                   text="儲存設定"
                   btnType="primary"
                   isDisabled={!isValid}
+                  onClick={handleSubmit(onSubmit)}
                 />
               </form>
             ) : (
@@ -307,7 +323,7 @@ const MemberInfo = () => {
             <h5 className="text-black fw-bold mb-5 mb-sm-7">基本資料</h5>
             {isOtherDataEditMode ? (
               // 編輯表單
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form>
                 {/* 姓名 */}
                 <div className="mb-3 mb-sm-5">
                   <label
@@ -547,6 +563,7 @@ const MemberInfo = () => {
                   text="儲存設定"
                   btnType="primary"
                   isDisabled={!isValid}
+                  onClick={handleSubmit(onSubmit)}
                 />
               </form>
             ) : (

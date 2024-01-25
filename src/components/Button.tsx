@@ -13,7 +13,7 @@ const Button = ({ text, btnType, isDisabled, fit, onClick }: ButtonType) => {
   return (
     <>
       <button
-        type="submit"
+        type="button"
         className={`btn 
         ${
           btnType === "primary"

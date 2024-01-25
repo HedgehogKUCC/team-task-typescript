@@ -50,7 +50,14 @@ const App = () => {
                 </ProtectedRoute>
               }
             ></Route>
-            <Route path="/member" element={<MemberLayout />}>
+            <Route
+              path="/member"
+              element={
+                <ProtectedRoute>
+                  <MemberLayout />
+                </ProtectedRoute>
+              }
+            >
               <Route index element={<Navigate to="info" replace />}></Route>
               <Route path="info" element={<MemberInfo />}></Route>
               <Route path="order" element={<MemberOrder />}></Route>
