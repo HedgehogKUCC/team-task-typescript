@@ -10,6 +10,7 @@ import { useState } from "react";
 import ZipCodeMap from "../utils/zipcodes";
 import { useForm, SubmitHandler } from "react-hook-form";
 import LoadingModal from "../components/ReserveLoadingModal";
+import EditRoomModal from "../components/EditRoomTypeModal";
 import React, { useEffect } from "react";
 import { apiGetRoom } from "../api/apiRoom";
 import { apiAddOrder } from "../api/apiOrder";
@@ -20,7 +21,10 @@ import { useAppSelector } from "../store/hook";
 import { selectUser } from "../store/slices/userSlice";
 import { setOrder } from "../store/slices/orderSlice";
 import { useAppDispatch } from "../store/hook";
-
+import "react-date-range/dist/styles.css"; // main css file
+import "react-date-range/dist/theme/default.css"; // theme css file
+import { DateRange } from "react-date-range";
+import { zhTW } from "date-fns/locale";
 const ReserveRoom = () => {
   interface Address {
     zipcode: number;
@@ -43,7 +47,15 @@ const ReserveRoom = () => {
   }
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
+  //日期選擇器
+  const [selectDate, setSelectDate] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+      key: "selection",
+    },
+  ]);
+  const [isSelectDateOpen, setIsSelectDateOpen] = useState(false); //日期選擇器是否開啟
   const [selectCounty, setSelectCounty] = useState<string>(""); //選擇縣市
   const [selectCity, setSelectCity] = useState<string>(""); //選擇區域
   const [cities, setCities] = useState<string[]>([]); //區域資料
@@ -52,10 +64,13 @@ const ReserveRoom = () => {
   const [roomData, setRoomData] = useState<Room>();
   const [postData, setPostData] = useState<IOderForm>();
   const [isApplyUserData, setIsApplyUserData] = useState<boolean>(false); //是否套用會員資料
-  const user = useAppSelector(selectUser);
-
+  const [selectRoomId, setSelectRoomId] = useState<string>(
+    "6597f7f8c9e6ae814611a455",
+  ); //選擇房型id
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const countyArray = ZipCodes.map((item) => item.county);
   const allCounty = Array.from(new Set(countyArray));
+  const user = useAppSelector(selectUser);
 
   //選擇縣市後，取得區域資料
   const handleChangeCounty = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -83,17 +98,17 @@ const ReserveRoom = () => {
     }
   };
 
-  //取得房間資料
-  const getRoomData = async () => {
-    const res = await apiGetRoom("6597f7f8c9e6ae814611a455");
-    if (res) {
-      setRoomData(res.result);
-    }
-  };
-
   useEffect(() => {
+    //取得房間資料
+    const getRoomData = async () => {
+      const res = await apiGetRoom(selectRoomId);
+      if (res) {
+        setRoomData(res.result);
+      }
+    };
     getRoomData();
-  }, []);
+    console.log(selectDate);
+  }, [selectRoomId, selectDate]);
 
   //套用會員資料
   const setUserData = () => {
@@ -104,7 +119,7 @@ const ReserveRoom = () => {
       const { name, phone, email, address } = IuserData;
 
       const data: IOderForm = {
-        roomId: "6597f7f8c9e6ae814611a455", //可從路徑取得 或 存入store
+        roomId: selectRoomId, //可從路徑取得 或 存入store
         checkInDate: "2024/01/19", //存入store
         checkOutDate: "2024/01/20", // 存入store
         peopleNum: 2, //存入store
@@ -149,7 +164,7 @@ const ReserveRoom = () => {
     } else {
       //當沒有使用套用會員資料時，postData 為空，需自行填寫資料後送出
       const postForm: IOderForm = {
-        roomId: "6597f7f8c9e6ae814611a455", //可從路徑取得 或 存入store
+        roomId: selectRoomId || "6597f7f8c9e6ae814611a455", //可從路徑取得 或 存入store
         checkInDate: "2024/01/19", //存入store
         checkOutDate: "2024/01/20", // 存入store
         peopleNum: 2, //存入store
@@ -207,7 +222,12 @@ const ReserveRoom = () => {
       <section className="bg_primary_10 text-black py-7 py-md-9">
         <div className="container">
           <LoadingModal isLoading={loading} />
-
+          <EditRoomModal
+            openModal={editModalOpen}
+            setOpenModal={setEditModalOpen}
+            setSelectRoomId={setSelectRoomId}
+            currentRoomId={selectRoomId}
+          ></EditRoomModal>
           <div className="d-flex align-items-center  mb-7">
             <Link to="/">
               <i
@@ -233,17 +253,21 @@ const ReserveRoom = () => {
                   >
                     選擇房型
                   </h4>
-                  <p>景觀雙人房</p>
+                  <p>{roomData?.name}</p>
                 </div>
                 <button
                   type="button"
                   className="fw-bold btn text-decoration-underline"
+                  onClick={() => setEditModalOpen(true)}
                 >
                   編輯
                 </button>
               </div>
               {/* 訂房日期 */}
-              <div className="d-flex justify-content-between align-items-center mb-4">
+              <div
+                className="d-flex justify-content-between align-items-center mb-4"
+                style={{ position: "relative" }}
+              >
                 <div>
                   <h4
                     className="fw-bold fs-6 border-left-primary-4"
@@ -254,12 +278,50 @@ const ReserveRoom = () => {
                   <p className="mb-0">入住：6 月 10 日星期二</p>
                   <p>退房：6 月 11 日星期三</p>
                 </div>
-                <button
-                  type="button"
-                  className="fw-bold btn text-decoration-underline"
-                >
-                  編輯
-                </button>
+                {!isSelectDateOpen && (
+                  <button
+                    type="button"
+                    className="fw-bold btn text-decoration-underline"
+                    onClick={() => setIsSelectDateOpen(true)}
+                  >
+                    編輯
+                  </button>
+                )}
+                {isSelectDateOpen && (
+                  <button
+                    type="button"
+                    onClick={() => setIsSelectDateOpen(false)}
+                    className="fw-bold btn text-decoration-underline active"
+                  >
+                    確定
+                  </button>
+                )}
+                {isSelectDateOpen && (
+                  <div
+                    style={{ position: "absolute", top: "25px", left: "0px" }}
+                  >
+                    <DateRange
+                      editableDateInputs={true}
+                      onChange={(item) =>
+                        setSelectDate([
+                          {
+                            startDate: item.selection.startDate || new Date(),
+                            endDate:
+                              item.selection.endDate ||
+                              new Date(
+                                new Date().getTime() + 24 * 60 * 60 * 1000,
+                              ),
+                            key: "selection",
+                          },
+                        ])
+                      }
+                      moveRangeOnFirstSelection={false}
+                      ranges={selectDate}
+                      locale={zhTW}
+                      minDate={new Date()}
+                    />
+                  </div>
+                )}
               </div>
               {/* 房客人數 */}
               <div className="d-flex justify-content-between align-items-center">

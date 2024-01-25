@@ -24,3 +24,8 @@ export interface IRoomData {
     status: boolean;
     result: Room;
 }
+
+export interface IRoomListData {
+    status: boolean;
+    result: Room[];
+}
