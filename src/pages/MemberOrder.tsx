@@ -1,11 +1,15 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
+import CancelOrderModal from "../components/CancelOrderModal";
 
 import { apiOrdersList } from "../api";
 import { Order } from "../api/interface/orders";
 
 import styles from "../assets/scss/modules/member.module.scss";
+import Modal from "bootstrap/js/dist/modal";
+
+let cancelOrderModal: Modal | null = null;
 
 const MemberOrder = () => {
   const navigate = useNavigate();
@@ -79,8 +83,30 @@ const MemberOrder = () => {
     navigate("/room_detail");
   };
 
+  // 取消預定
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!modalRef.current) return;
+    cancelOrderModal = new Modal(modalRef.current);
+  }, []);
+
+  const showCancelOrderModal = () => {
+    if (!cancelOrderModal) return;
+    cancelOrderModal.show();
+  };
+
+  const hideCancelOrder = () => {
+    if (!cancelOrderModal) return;
+    cancelOrderModal.hide();
+  };
+
   return (
     <>
+      <CancelOrderModal
+        modalRef={modalRef}
+        hideModal={() => hideCancelOrder()}
+      />
       <div className="row">
         {/* 即將來的行程 */}
         <div className="col-12 col-md-7">
@@ -194,7 +220,12 @@ const MemberOrder = () => {
 
               <div className="row gx-3">
                 <div className="col-6">
-                  <Button text="取消預定" btnType="secondary" fit="container" />
+                  <Button
+                    text="取消預定"
+                    btnType="secondary"
+                    fit="container"
+                    onClick={() => showCancelOrderModal()}
+                  />
                 </div>
                 <div className="col-6">
                   <Button
