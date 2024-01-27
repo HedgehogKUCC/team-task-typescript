@@ -36,7 +36,7 @@ const MemberOrder = () => {
     const ordersBeforeToday = orderList.filter((order) => {
       const checkOutDate = new Date(order.checkOutDate);
       checkOutDate.setHours(0, 0, 0, 0);
-      return checkOutDate < today;
+      return checkOutDate < today && order.status === 0;
     });
 
     return ordersBeforeToday;
@@ -50,7 +50,7 @@ const MemberOrder = () => {
     const ordersBeforeToday = orderList.filter((order) => {
       const checkInDate = new Date(order.checkInDate);
       checkInDate.setHours(0, 0, 0, 0);
-      return checkInDate > today;
+      return checkInDate > today && order.status === 0;
     });
 
     return ordersBeforeToday;
@@ -85,14 +85,16 @@ const MemberOrder = () => {
 
   // 取消預定
   const modalRef = useRef<HTMLDivElement>(null);
+  const [cancelID, setCancelID] = useState("");
 
   useEffect(() => {
     if (!modalRef.current) return;
     cancelOrderModal = new Modal(modalRef.current);
   }, []);
 
-  const showCancelOrderModal = () => {
+  const showCancelOrderModal = (id: string) => {
     if (!cancelOrderModal) return;
+    setCancelID(id);
     cancelOrderModal.show();
   };
 
@@ -105,7 +107,9 @@ const MemberOrder = () => {
     <>
       <CancelOrderModal
         modalRef={modalRef}
+        cancelID={cancelID}
         hideModal={() => hideCancelOrder()}
+        reloadOrderList={() => getOrderList()}
       />
       <div className="row">
         {/* 即將來的行程 */}
@@ -224,7 +228,7 @@ const MemberOrder = () => {
                     text="取消預定"
                     btnType="secondary"
                     fit="container"
-                    onClick={() => showCancelOrderModal()}
+                    onClick={() => showCancelOrderModal(order._id)}
                   />
                 </div>
                 <div className="col-6">
