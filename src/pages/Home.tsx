@@ -1,15 +1,22 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import HeroButton from "../components/HeroButton";
 import SectionTitle from "../components/SectionTitle";
+
 import styles from "../assets/scss/modules/home.module.scss";
+
 import { apiHomeNews, apiHomeCulinary, apiRoomsList } from "../api";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 
 const Home = () => {
+  const navigate = useNavigate();
+
   // 輪播資料
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -215,7 +222,7 @@ const Home = () => {
                 <h3 className={styles.carousel_subtitle}>
                   我們致力於為您提供無與倫比的奢華體驗與優質服務
                 </h3>
-                <HeroButton text="立即訂房" />
+                <HeroButton text="立即訂房" onClick={() => navigate("/room")} />
               </div>
             </div>
           </div>
@@ -361,7 +368,10 @@ const Home = () => {
               <h3 className="fw-bold my-5 my-md-7">
                 NT$ {activeRoomData?.price.toLocaleString()}
               </h3>
-              <HeroButton text="查看更多" />
+              <HeroButton
+                text="查看更多"
+                onClick={() => navigate("/room_detail")}
+              />
               <div className="d-flex justify-content-end mt-5 mt-md-7">
                 <img
                   src="./ic_ArrowLeft.svg"
