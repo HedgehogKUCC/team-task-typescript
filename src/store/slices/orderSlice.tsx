@@ -34,7 +34,7 @@ const initialState: IOrder = {
     checkOutDate: "",
     peopleNum: 0,
     orderUserId: "",
-    status: true,
+    status: 0,
     createdAt: "",
     updatedAt: "",
   },
