@@ -68,3 +68,4 @@ export const apiRoomsList = () => roomsRequest.get("/");
 
 // Orders- 訂單
 export const apiOrdersList = () => ordersRequest.get("/");
+export const apiOrderDelete = (id: string) => ordersRequest.delete(`/${id}`);
