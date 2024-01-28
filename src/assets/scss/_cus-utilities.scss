@@ -94,11 +94,62 @@
   height: 100%;
   object-fit: cover;
 }
+//height
+
+.edit-room{
+ 
+  .swiper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  
+
+  .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    min-height: 450px;
+    /* Center slide text vertically */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+  }
+  .swiper-pagination-bullet-active{
+    background-color: $primary;
+  }
+}
 
 @media screen and (min-width: 768px) {
   .fs-md-1 {
     font-size: 48px !important;
   }
+  .fs-md-3{
+    font-size: 24px !important;
+  }
+  .vh-md-60{
+    height: 60vh;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .edit-room .content{
+    p{
+      font-size: 12px;
+    }
+    .btn{
+      font-size: 12px;
+      padding: 8px;
+    }
+  }
+  
 }
 
 @media screen and (max-width: 576px) {

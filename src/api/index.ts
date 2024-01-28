@@ -20,7 +20,12 @@ const roomsRequest = axios.create({
   baseURL: `${API_BASE_URL}/v1/rooms`,
 });
 
+const ordersRequest = axios.create({
+  baseURL: `${API_BASE_URL}/v1/orders`,
+});
+
 interceptorRequest(userRequest);
+interceptorRequest(ordersRequest);
 
 interface IApiUserSignUpData {
   name: string;
@@ -60,3 +65,7 @@ export const apiHomeCulinary = () => homeRequest.get("/culinary");
 
 // Rooms - 房型
 export const apiRoomsList = () => roomsRequest.get("/");
+
+// Orders- 訂單
+export const apiOrdersList = () => ordersRequest.get("/");
+export const apiOrderDelete = (id: string) => ordersRequest.delete(`/${id}`);
