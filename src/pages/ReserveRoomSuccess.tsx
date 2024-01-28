@@ -4,10 +4,11 @@ import CheckGreenIcon from "/ic_checkGreen.svg";
 import CheckIcon from "/ic_check_primary.svg";
 import LineIcon from "/ic_line.svg";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../store/hook";
 import { selectUser, setName, setToken } from "../store/slices/userSlice";
 import { selectOrder } from "../store/slices/orderSlice";
+import { calculateNight, dateTimeFormate } from "../utils/useDate";
 const ReserveRoomSuccess = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
@@ -27,9 +28,21 @@ const ReserveRoomSuccess = () => {
   if (!user.token && localStorageToken) {
     dispatch(setToken(UserToken));
   }
+  const [reserveNights, setReserveNights] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  useEffect(() => {
+    if (order) {
+      const nights = calculateNight(order.checkInDate, order.checkOutDate);
+      setReserveNights(nights);
+      setTotalPrice(nights * order.roomId.price);
+    }
+  }, [order]);
 
   const navigate = useNavigate();
   useEffect(() => {
+    console.log("order", order);
+
     if (!order && user) {
       //如果沒有order資料
       //前往/reserve頁面
@@ -42,8 +55,8 @@ const ReserveRoomSuccess = () => {
       <Navbar isEscapeDocumentFlow={false} />
       <section className=" py-9">
         <div className="container">
-          <div className="row">
-            <div className="col-md-7">
+          <div className="row align-items-center justify-content-center">
+            <div className="col-lg-7 ">
               <div className="d-flex align-items-center mb-7">
                 <img
                   className="w-7 h-7 me-7"
@@ -94,25 +107,27 @@ const ReserveRoomSuccess = () => {
             <div className="col text-black">
               <div className="rounded-20 p-7 bg-white">
                 <div className="mb-7">
-                  <p>預訂參考編號： HH2302183151222</p>
+                  <p>預訂參考編號： {order.orderUserId}</p>
                   <p className="fs-4 fw-bold">即將來的行程</p>
                 </div>
                 <img
                   className="object-fit-cover mb-7 rounded-8"
-                  src="https://raw.githubusercontent.com/hexschool/2022-web-layout-training/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/room1.png"
+                  src={order.roomId.imageUrl}
                   alt="room"
                 />
                 <div className="d-flex align-items-center  mb-5 ">
-                  <p className="mb-0 fw-bold">尊爵雙人房，1 晚</p>
+                  <p className="mb-0 fw-bold">
+                    {order.roomId.name}，{reserveNights}晚
+                  </p>
                   <img className="mx-3" src={LineIcon} alt="Line Icon" />
-                  <p className="mb-0 fw-bold">住宿人數：2 位</p>
+                  <p className="mb-0 fw-bold">住宿人數：{order.peopleNum}人</p>
                 </div>
                 <div className="mb-5">
                   <h4
                     className="fs-7 border-left-primary-4 my-4"
                     style={{ paddingLeft: "12px" }}
                   >
-                    入住：6 月 10 日星期二，15:00 可入住
+                    入住：{dateTimeFormate(order.checkInDate)}，15:00 可入住
                   </h4>
                   <h4
                     className="fs-7 my-4"
@@ -121,10 +136,12 @@ const ReserveRoomSuccess = () => {
                       borderLeft: "4px solid #909090",
                     }}
                   >
-                    退房：6 月 11 日星期三，12:00 前退房
+                    退房：{dateTimeFormate(order.checkOutDate)}，12:00 前退房
                   </h4>
                 </div>
-                <p className="fw-bold">NT$ 10,000</p>
+                <p className="fw-bold">
+                  NT$ {(totalPrice - 1000).toLocaleString("en-US")}
+                </p>
 
                 <div
                   style={{ margin: "40px 0", border: "1px solid #ECECEC" }}
@@ -137,7 +154,7 @@ const ReserveRoomSuccess = () => {
                 >
                   房內設備
                 </h4>
-                <div className=" rounded-8 bg-white d-flex flex-wrap gap-7">
+                <div className=" rounded-8 bg-white d-flex flex-wrap gap-md-7 gap-4">
                   <div className="row">
                     {orderRoomInfo.facilityInfo.map(
                       (item, index) =>

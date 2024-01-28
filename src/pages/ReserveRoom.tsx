@@ -6,10 +6,11 @@ import BedIcon from "/ic_Bed.svg";
 import PersonIcon from "/ic_Person.svg";
 import CheckIcon from "/ic_check_primary.svg";
 import ZipCodes from "../utils/zipcodes";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ZipCodeMap from "../utils/zipcodes";
 import { useForm, SubmitHandler } from "react-hook-form";
 import LoadingModal from "../components/ReserveLoadingModal";
+import EditRoomModal from "../components/EditRoomTypeModal";
 import React, { useEffect } from "react";
 import { apiGetRoom } from "../api/apiRoom";
 import { apiAddOrder } from "../api/apiOrder";
@@ -20,7 +21,10 @@ import { useAppSelector } from "../store/hook";
 import { selectUser } from "../store/slices/userSlice";
 import { setOrder } from "../store/slices/orderSlice";
 import { useAppDispatch } from "../store/hook";
-
+import "react-date-range/dist/styles.css"; // main css file
+import "react-date-range/dist/theme/default.css"; // theme css file
+import { DateRange } from "react-date-range";
+import { zhTW } from "date-fns/locale";
 const ReserveRoom = () => {
   interface Address {
     zipcode: number;
@@ -41,21 +45,42 @@ const ReserveRoom = () => {
     peopleNum: number;
     userInfo: UserInfo;
   }
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
-  const [selectCounty, setSelectCounty] = useState<string>(""); //選擇縣市
-  const [selectCity, setSelectCity] = useState<string>(""); //選擇區域
+  const dateRangeRef = useRef<HTMLDivElement | null>(null);
+  //日期選擇器
+  const [selectDate, setSelectDate] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+      key: "selection",
+    },
+  ]);
+  const [isSelectDateOpen, setIsSelectDateOpen] = useState(false); //日期選擇器是否開啟
+  const [selectCounty, setSelectCounty] = useState<string>("--請選擇縣市--"); //選擇縣市
+  const [selectCity, setSelectCity] = useState<string>("--請選擇區域--"); //選擇區域
   const [cities, setCities] = useState<string[]>([]); //區域資料
   const [selectZipcode, setZipcode] = useState<number>(); //郵遞區號
   const [loading, setLoading] = useState(false);
   const [roomData, setRoomData] = useState<Room>();
   const [postData, setPostData] = useState<IOderForm>();
   const [isApplyUserData, setIsApplyUserData] = useState<boolean>(false); //是否套用會員資料
-  const user = useAppSelector(selectUser);
-
+  const [selectRoomId, setSelectRoomId] = useState<string>(
+    "6597f7f8c9e6ae814611a455",
+  ); //選擇房型id
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [reservePeople, setReservePeople] = useState<number>(2); //訂房人數
+  const [isOpenEditReservePeople, setIsOpenEditReservePeople] =
+    useState<boolean>(false);
+  const [roomNights, setRoomNights] = useState<number>(1); //訂房天數
+  const [totalPrice, setTotalPrice] = useState<number>(0);
   const countyArray = ZipCodes.map((item) => item.county);
   const allCounty = Array.from(new Set(countyArray));
+  const user = useAppSelector(selectUser);
+  //房間格局
+  const roomLayout = ["市景", "獨立衛浴", "客廳", "客房", "樓層電梯"];
+  const options = [1, 2, 3, 4];
 
   //選擇縣市後，取得區域資料
   const handleChangeCounty = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -82,45 +107,65 @@ const ReserveRoom = () => {
       }
     }
   };
-
-  //取得房間資料
-  const getRoomData = async () => {
-    const res = await apiGetRoom("6597f7f8c9e6ae814611a455");
-    if (res) {
-      setRoomData(res.result);
-    }
+  //編輯人數
+  const handleChangePeople = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setReservePeople(event.target.value as unknown as number);
+  };
+  //日期格式化
+  const formattedDate = (date: Date) => {
+    return date
+      .toLocaleDateString("zh-TW", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+      .replace(/\//g, "-");
+  };
+  //用於顯示訂房日期
+  const showFormattedDate = (date: Date) => {
+    return date.toLocaleDateString("zh-TW", {
+      month: "long",
+      day: "numeric",
+      weekday: "long",
+    });
+  };
+  //計算訂房天數
+  const calculateNights = (startDate: Date, endDate: Date) => {
+    const oneDay = 24 * 60 * 60 * 1000; // 每天的毫秒數
+    const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+    const diffDays = Math.floor(diffTime / oneDay);
+    return diffDays;
   };
 
   useEffect(() => {
+    //取得房間資料
+    const getRoomData = async () => {
+      const res = await apiGetRoom(selectRoomId);
+      if (res) {
+        setRoomData(res.result);
+      }
+    };
     getRoomData();
-  }, []);
+    setRoomNights(
+      calculateNights(selectDate[0].startDate, selectDate[0].endDate) !== 0
+        ? calculateNights(selectDate[0].startDate, selectDate[0].endDate)
+        : 1,
+    );
+  }, [selectRoomId, selectDate, roomNights, selectCity]);
+
+  //計算總價格
+  useEffect(() => {
+    if (roomData) {
+      const price = roomData.price * roomNights;
+      setTotalPrice(price);
+    }
+  }, [totalPrice, roomNights, roomData]);
 
   //套用會員資料
   const setUserData = () => {
-    //當使用套用會員資料時，將會員資料存入postData 主要用於送出訂單 --start
-    setIsApplyUserData(true);
     if (user.user) {
       const IuserData: IApiUserResult = user.user.result;
       const { name, phone, email, address } = IuserData;
-
-      const data: IOderForm = {
-        roomId: "6597f7f8c9e6ae814611a455", //可從路徑取得 或 存入store
-        checkInDate: "2024/01/19", //存入store
-        checkOutDate: "2024/01/20", // 存入store
-        peopleNum: 2, //存入store
-        userInfo: {
-          address: {
-            zipcode: address.zipcode,
-            detail: address.detail,
-          },
-          name,
-          phone,
-          email,
-        },
-      };
-      setPostData(data);
-      //當使用套用會員資料時，將會員資料存入postData 主要用於送出訂單 --end
-
       //套用會員資料 並設定表單資料 主要用於顯示 --start
       setValue("userInfo.name", name);
       setValue("userInfo.phone", phone);
@@ -130,6 +175,7 @@ const ReserveRoom = () => {
       setSelectCity(address.city);
       setSelectCounty(address.county);
       //套用會員資料 並設定表單資料 --end
+      console.log("selectCity", selectCity);
     } else {
       return;
     }
@@ -138,39 +184,37 @@ const ReserveRoom = () => {
   //送出訂單
   const onSubmit: SubmitHandler<IOderForm> = (data) => {
     setLoading(true);
-    if (isApplyUserData) {
-      if (postData)
-        //當使用套用會員資料時，postData 已經有資料，直接送出
-        apiAddOrder(postData).then((res) => {
-          if (res) {
-            dispatch(setOrder(res));
-          }
-        });
-    } else {
-      //當沒有使用套用會員資料時，postData 為空，需自行填寫資料後送出
-      const postForm: IOderForm = {
-        roomId: "6597f7f8c9e6ae814611a455", //可從路徑取得 或 存入store
-        checkInDate: "2024/01/19", //存入store
-        checkOutDate: "2024/01/20", // 存入store
-        peopleNum: 2, //存入store
-        userInfo: {
-          address: {
-            zipcode: selectZipcode ? selectZipcode : 0,
-            detail: data.userInfo.address.detail,
-          },
-          name: data.userInfo.name,
-          phone: data.userInfo.phone,
-          email: data.userInfo.email,
+
+    const postForm: IOderForm = {
+      roomId: selectRoomId || "6597f7f8c9e6ae814611a455", //可從路徑取得 或 存入store
+      checkInDate: formattedDate(selectDate[0].startDate), //存入store
+      checkOutDate: formattedDate(selectDate[0].endDate), // 存入store
+      peopleNum: reservePeople, //存入store
+      userInfo: {
+        address: {
+          zipcode: selectZipcode ? selectZipcode : 0,
+          detail: data.userInfo.address.detail,
         },
-      };
-      setPostData(postForm);
-      if (postForm) {
-        apiAddOrder(postForm).then((res) => {
-          if (res) {
-            dispatch(setOrder(res));
-          }
-        });
-      }
+        name: data.userInfo.name,
+        phone: data.userInfo.phone,
+        email: data.userInfo.email,
+      },
+    };
+    if (postForm.checkInDate === postForm.checkOutDate) {
+      //若入住日期與退房日期相同，則退房日期加一天
+      postForm.checkOutDate = formattedDate(
+        new Date(
+          new Date(postForm.checkOutDate).getTime() + 24 * 60 * 60 * 1000,
+        ),
+      );
+    }
+    setPostData(postForm);
+    if (postForm) {
+      apiAddOrder(postForm).then((res) => {
+        if (res) {
+          dispatch(setOrder(res));
+        }
+      });
     }
     //3秒後跳轉至訂單成功頁面 並清空postData 與 loading
     setTimeout(() => {
@@ -207,7 +251,12 @@ const ReserveRoom = () => {
       <section className="bg_primary_10 text-black py-7 py-md-9">
         <div className="container">
           <LoadingModal isLoading={loading} />
-
+          <EditRoomModal
+            openModal={editModalOpen}
+            setOpenModal={setEditModalOpen}
+            setSelectRoomId={setSelectRoomId}
+            currentRoomId={selectRoomId}
+          ></EditRoomModal>
           <div className="d-flex align-items-center  mb-7">
             <Link to="/">
               <i
@@ -222,7 +271,7 @@ const ReserveRoom = () => {
             onSubmit={handleSubmit(onSubmit)}
             className="row justify-content-between"
           >
-            <div className="col-md-7">
+            <div className="col-lg-7">
               <h3 className="fw-bold fs-28 mb-7">訂房資訊</h3>
               {/* 選擇房型 */}
               <div className="d-flex justify-content-between align-items-center mb-4">
@@ -233,17 +282,21 @@ const ReserveRoom = () => {
                   >
                     選擇房型
                   </h4>
-                  <p>景觀雙人房</p>
+                  <p>{roomData?.name}</p>
                 </div>
                 <button
                   type="button"
                   className="fw-bold btn text-decoration-underline"
+                  onClick={() => setEditModalOpen(true)}
                 >
                   編輯
                 </button>
               </div>
               {/* 訂房日期 */}
-              <div className="d-flex justify-content-between align-items-center mb-4">
+              <div
+                className="d-flex justify-content-between align-items-center mb-4"
+                style={{ position: "relative" }}
+              >
                 <div>
                   <h4
                     className="fw-bold fs-6 border-left-primary-4"
@@ -251,15 +304,56 @@ const ReserveRoom = () => {
                   >
                     訂房日期
                   </h4>
-                  <p className="mb-0">入住：6 月 10 日星期二</p>
-                  <p>退房：6 月 11 日星期三</p>
+                  <p className="mb-0">
+                    入住:{showFormattedDate(selectDate[0].startDate)}
+                  </p>
+                  <p>退房:{showFormattedDate(selectDate[0].endDate)}</p>
                 </div>
-                <button
-                  type="button"
-                  className="fw-bold btn text-decoration-underline"
-                >
-                  編輯
-                </button>
+                {!isSelectDateOpen && (
+                  <button
+                    type="button"
+                    className="fw-bold btn text-decoration-underline"
+                    onClick={() => setIsSelectDateOpen(true)}
+                  >
+                    編輯
+                  </button>
+                )}
+                {isSelectDateOpen && (
+                  <button
+                    type="button"
+                    onClick={() => setIsSelectDateOpen(false)}
+                    className=" fw-bold btn btn-outline-primary  text-decoration-underline "
+                  >
+                    確定
+                  </button>
+                )}
+                {isSelectDateOpen && (
+                  <div
+                    ref={dateRangeRef}
+                    style={{ position: "absolute", top: "25px", left: "0px" }}
+                  >
+                    <DateRange
+                      editableDateInputs={true}
+                      onChange={(item) =>
+                        setSelectDate([
+                          {
+                            startDate: item.selection.startDate || new Date(),
+                            endDate:
+                              item.selection.endDate ||
+                              new Date(
+                                new Date().getTime() + 24 * 60 * 60 * 1000,
+                              ),
+                            key: "selection",
+                          },
+                        ])
+                      }
+                      moveRangeOnFirstSelection={false}
+                      ranges={selectDate}
+                      locale={zhTW}
+                      minDate={new Date()}
+                    />
+                  </div>
+                )}
               </div>
               {/* 房客人數 */}
               <div className="d-flex justify-content-between align-items-center">
@@ -270,14 +364,46 @@ const ReserveRoom = () => {
                   >
                     房客人數
                   </h4>
-                  <p className="mb-0">2 人</p>
+                  {isOpenEditReservePeople && (
+                    <select
+                      value={reservePeople}
+                      onChange={handleChangePeople}
+                      className="form-select py-1"
+                      style={{ width: "100px", textAlign: "center" }}
+                    >
+                      {options.map((option) => (
+                        <option
+                          key={option}
+                          value={option}
+                          className="text-center"
+                        >
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  {!isOpenEditReservePeople && (
+                    <p className="mb-0">{reservePeople} 人</p>
+                  )}
                 </div>
-                <button
-                  type="button"
-                  className="fw-bold btn text-decoration-underline"
-                >
-                  編輯
-                </button>
+                {!isOpenEditReservePeople && (
+                  <button
+                    type="button"
+                    className="fw-bold btn text-decoration-underline"
+                    onClick={() => setIsOpenEditReservePeople(true)}
+                  >
+                    編輯
+                  </button>
+                )}
+                {isOpenEditReservePeople && (
+                  <button
+                    type="button"
+                    onClick={() => setIsOpenEditReservePeople(false)}
+                    className=" fw-bold btn btn-outline-primary  text-decoration-underline "
+                  >
+                    確定
+                  </button>
+                )}
               </div>
 
               <div
@@ -388,8 +514,8 @@ const ReserveRoom = () => {
                       value={selectCounty}
                       onChange={handleChangeCounty}
                     >
-                      {!postData && <option value="">-- 請選擇縣市 --</option>}
-                      {postData && (
+                      {!user.user && <option value="">-- 請選擇縣市 --</option>}
+                      {user.user && (
                         <option value={selectCounty}>{selectCounty}</option>
                       )}
                       {allCounty.map((item, index) => (
@@ -405,8 +531,10 @@ const ReserveRoom = () => {
                       value={selectCity}
                       onChange={handleChangeCity}
                     >
-                      {!postData && <option value="">-- 請選擇地區 --</option>}
-                      {postData && (
+                      {!user.user && (
+                        <option value="123">-- 請選擇地區 --</option>
+                      )}
+                      {user.user && (
                         <option value={selectCity}>{selectCity}</option>
                       )}
                       {cities.map((city, index) => (
@@ -488,27 +616,16 @@ const ReserveRoom = () => {
                   房間格局
                 </h4>
                 <div className=" rounded-8 bg-white p-4 d-flex flex-wrap gap-2">
-                  <span
-                    className="d-flex align-items-center me-7"
-                    style={{ width: "100px" }}
-                  >
-                    <img className="pe-2" src={CheckIcon} alt="Check Icon" />
-                    <p className="mb-0">市景</p>
-                  </span>
-                  <span
-                    className="d-flex align-items-center me-7"
-                    style={{ width: "100px" }}
-                  >
-                    <img className="pe-2" src={CheckIcon} alt="Check Icon" />
-                    <p className="mb-0">獨立衛浴</p>
-                  </span>
-                  <span
-                    className="d-flex align-items-center me-7"
-                    style={{ width: "100px" }}
-                  >
-                    <img className="pe-2" src={CheckIcon} alt="Check Icon" />
-                    <p className="mb-0">客廳</p>
-                  </span>
+                  {roomLayout.map((item, index) => (
+                    <span
+                      className="d-flex align-items-center me-7"
+                      style={{ width: "100px" }}
+                      key={index}
+                    >
+                      <img className="pe-2" src={CheckIcon} alt="Check Icon" />
+                      <p className="mb-0">{item}</p>
+                    </span>
+                  ))}
                 </div>
                 <h4
                   className="fw-bold fs-6 border-left-primary-4 my-4"
@@ -570,10 +687,14 @@ const ReserveRoom = () => {
                   src={roomData?.imageUrl}
                   alt="room"
                 />
-                <h4 className="fs-28 fw-bold">價格詳情</h4>
-                <div className="d-flex justify-content-between">
-                  <p>NT$ 10,000 X 2 晚</p>
-                  <p>NT$ 20,000</p>
+                <h4 className="fs-28 fw-bold mb-5">價格詳情</h4>
+                <div className="d-flex justify-content-between ">
+                  <p>
+                    NT$ {roomData?.price}
+                    <span className="px-2">X</span>
+                    {roomNights}晚
+                  </p>
+                  <p>NT$ {totalPrice.toLocaleString("en-US")}</p>
                 </div>
                 <div className="d-flex justify-content-between">
                   <p>住宿折扣</p>
@@ -586,7 +707,9 @@ const ReserveRoom = () => {
 
                 <div className="d-flex justify-content-between">
                   <p className="fw-bold">總價</p>
-                  <p className="fw-bold">NT$ 19,000</p>
+                  <p className="fw-bold">
+                    NT$ {(totalPrice - 1000).toLocaleString("en-US")}
+                  </p>
                 </div>
                 <button
                   type="submit"

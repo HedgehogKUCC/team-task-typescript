@@ -10,7 +10,7 @@ export interface Order {
   checkOutDate: string;
   peopleNum: number;
   orderUserId: string;
-  status: boolean;
+  status: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -48,8 +48,6 @@ interface Room {
   createdAt: string;
   updatedAt: string;
 }
-
-
 
 export interface IOderForm {
   roomId: string;
