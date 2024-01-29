@@ -80,7 +80,7 @@ const Navbar = ({
     <>
       <nav
         className={`py-3 py-xxl-5 fixed-top ${
-          isEscapeDocumentFlow ? "position-absolute" : "position-relative"
+          isEscapeDocumentFlow ? "" : "position-relative"
         }`}
         ref={desktopNavRef}
       >
