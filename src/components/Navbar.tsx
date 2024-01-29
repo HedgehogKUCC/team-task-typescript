@@ -167,12 +167,12 @@ const Navbar = ({
                 )}
               </li>
               <li className="d-flex">
-                <a
+                <Link
                   className="px-6 py-3 btn btn-primary text-white fw-bold"
-                  href="#"
+                  to="/room"
                 >
                   立即訂房
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -210,12 +210,12 @@ const Navbar = ({
             )}
           </li>
           <li className="mb-3 w-100 d-flex justify-content-center align-items-center">
-            <a
+            <Link
               className="px-6 py-3 w-100 d-flex justify-content-center align-items-center btn btn-primary text-white fw-bold"
-              href="#"
+              to="/room"
             >
               立即訂房
-            </a>
+            </Link>
           </li>
           {UserToken && (
             <li className="w-100 d-flex justify-content-center align-items-center">
