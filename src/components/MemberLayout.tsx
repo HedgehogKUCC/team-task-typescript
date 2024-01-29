@@ -54,10 +54,11 @@ const MemberLayout = () => {
               <li key={index} className="d-block">
                 <NavLink
                   to={`/member/${item.path}`}
-                  className={`text-decoration-none fw-bold py-5 px-3 ${styles.member_tab}`}
+                  className={`text-decoration-none fw-bold pt-5 pb-2 px-3 ${styles.member_tab}`}
                   style={({ isActive }) => {
                     return {
                       color: isActive ? "#BF9D7D" : "#fff",
+                      borderBottom: isActive ? "solid 4px #BF9D7D" : "none",
                     };
                   }}
                 >
