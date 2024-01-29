@@ -9,9 +9,7 @@ import SizeIcon from "/ic_Size.svg";
 import PersonIcon from "/ic_Person.svg";
 import CarIcon from "/ic_Car.svg";
 import CheckIcon from "/ic_check_primary.svg";
-// import { format } from 'date-fns';
-// import { DayPicker } from 'react-day-picker';
-import 'react-day-picker/dist/style.css';
+import Calendar from '../components/Calendar';
 
 
 const RoomDetail = () => {
@@ -30,8 +28,6 @@ const RoomDetail = () => {
   useEffect(() => {
     getRoomData();
   }, [roomId]);
-
-  console.log('roomData', roomData);
 
   const BookingInstructions: string[] = [
     "入住時間為下午3點，退房時間為上午12點。",
@@ -75,6 +71,17 @@ const RoomDetail = () => {
     setDefaultCheckoutDate(formattedTomorrow);
   }, []);
 
+  //
+  const [selectedDate, setSelectedDate] = useState<Date | Date[]>(new Date());
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  const handleInputClick = () => {
+    setShowCalendar(true);
+  };
+
+  const handleCalendarClose = () => {
+    setShowCalendar(false);
+  };
 
   const [count, setCount] = useState(2);
 
@@ -216,20 +223,9 @@ const RoomDetail = () => {
                   <p className="fs-24 pb-7">預訂房型</p>
                   <h2 className="fw-bold">尊爵雙人房</h2>
                   <p className="pb-6">享受高級的住宿體驗，尊爵雙人房提供給您舒適寬敞的空間和精緻的裝潢。</p>
-
-                  {/* <div>
-                    <DayPicker
-                      mode="single"
-                      selected={selected}
-                      onSelect={setSelected}
-                      footer={footer}
-                      numberOfMonths={2}
-                    />
-                  </div> */}
-
                   <div className="d-flex mb-7">
-                    <input className="w-50 form-control me-2" type="text" placeholder="入住" defaultValue={defaultDate} />
-                    <input className="w-50 form-control" type="text" placeholder="退房" defaultValue={defaultCheckoutDate} />
+                    <input className="w-50 form-control me-2" type="text" placeholder="入住" defaultValue={defaultDate} onClick={handleInputClick} />
+                    <input className="w-50 form-control" type="text" placeholder="退房" defaultValue={defaultCheckoutDate} onClick={handleInputClick} />
                   </div>
 
                   <div className="row">
@@ -248,7 +244,11 @@ const RoomDetail = () => {
                   <Button
                     text="立即預訂"
                     btnType="primary-w-100"
+                    onClick={handleCalendarClose}
                   />
+                  {showCalendar && (
+                    <Calendar onChange={setSelectedDate} defaultValue={selectedDate} />
+                  )}
                 </div>
               </div>
 
