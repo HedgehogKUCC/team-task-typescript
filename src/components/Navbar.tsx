@@ -83,6 +83,10 @@ const Navbar = ({
           isEscapeDocumentFlow ? "" : "position-relative"
         }`}
         ref={desktopNavRef}
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%)",
+        }}
       >
         <div className="wider_container">
           <div className="d-flex justify-content-between align-items-center">
