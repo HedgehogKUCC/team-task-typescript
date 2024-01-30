@@ -22,13 +22,6 @@ jobs:
     steps:
       - run: |
           echo PR #${{ github.event.number }} has been merged
-  close_job:
-    # this job will only run if the PR has been closed without being merged
-    if: github.event.pull_request.merged == false
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo PR #${{ github.event.number }} has been closed without being merged
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
