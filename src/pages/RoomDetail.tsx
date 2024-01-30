@@ -132,7 +132,7 @@ const RoomDetail = () => {
                 <div className="m-7 position-absolute bottom-0 end-0">
                   <Button
                     text="看更多"
-                    btnType="third"
+                    btnType="secondary"
                   />
                 </div>
               </div>
@@ -243,7 +243,8 @@ const RoomDetail = () => {
                   <p className="m-0 fs-24 py-7 text-primary">NT$ 10,000</p>
                   <Button
                     text="立即預訂"
-                    btnType="primary-w-100"
+                    btnType="primary"
+                    fit="container"
                     onClick={handleCalendarClose}
                   />
                   {showCalendar && (
