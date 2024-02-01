@@ -67,6 +67,14 @@
 .fs-28 {
   font-size: 28px;
 }
+.fs-32 {
+  font-size: 32px;
+}
+.fs-sm-32 {
+  @include media-breakpoint-up(sm) {
+    font-size: 32px !important;
+  }
+}
 .fs-40 {
   font-size: 40px;
 }
@@ -124,6 +132,22 @@
   }
   .swiper-pagination-bullet-active{
     background-color: $primary;
+  }
+}
+
+.border-md-bottom {
+  @include media-breakpoint-up(md) {
+    border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+  }
+}
+
+.carousel_inner_rounded {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+
+  @include media-breakpoint-up(md) {
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 8px;
   }
 }
 
