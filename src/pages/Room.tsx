@@ -8,6 +8,7 @@ import PersonIcon from "/ic_Person.svg";
 import CarIcon from "/ic_Car.svg";
 import ArrowRightIcon from "/ic_ArrowRight.svg";
 import { apiRoomsList } from "../api";
+import { useNavigate } from 'react-router-dom';
 
 const Room = () => {
   // 輪播資料
@@ -87,6 +88,12 @@ const Room = () => {
     });
   };
 
+  const navigate = useNavigate();
+
+  const handleClick = (roomId: string) => {
+    navigate(`/room_detail/${roomId}`);
+  };
+
   return (
     <>
       <Navbar />
@@ -119,9 +126,8 @@ const Room = () => {
                 return (
                   <div
                     key={item.id}
-                    className={`carousel-item ${
-                      index === carouselActiveIndex ? "active" : ""
-                    } h-100`}
+                    className={`carousel-item ${index === carouselActiveIndex ? "active" : ""
+                      } h-100`}
                   >
                     <figure className="ratio ratio-16x9 overflow-hidden mb-0 h-100 img-fluid">
                       <img
@@ -196,9 +202,8 @@ const Room = () => {
                       return (
                         <div
                           key={i + 1}
-                          className={`carousel-item ${
-                            i === activeIndex ? "active" : ""
-                          } h-100`}
+                          className={`carousel-item ${i === activeIndex ? "active" : ""
+                            } h-100`}
                         >
                           <figure className="ratio ratio-16x9 overflow-hidden mb-0 h-100">
                             <img
@@ -257,7 +262,7 @@ const Room = () => {
                   </div>
                   <div className="d-flex align-items-center justify-content-between py-3">
                     <p className="h5 text-primary mb-0">NT$ {item.price}</p>
-                    <img src={ArrowRightIcon} alt="ArrowRight Icon" />
+                    <img src={ArrowRightIcon} alt="ArrowRight Icon" onClick={() => handleClick(item._id)} />
                   </div>
                 </div>
               </div>

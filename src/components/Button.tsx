@@ -15,16 +15,14 @@ const Button = ({ text, btnType, isDisabled, fit, onClick }: ButtonType) => {
       <button
         type="button"
         className={`btn 
-        ${
-          btnType === "primary"
+        ${btnType === "primary"
             ? "btn-primary text-white px-6 cus_primary_button"
             : ""
-        }
-        ${
-          btnType === "secondary"
+          }
+        ${btnType === "secondary"
             ? "btn-outline-primary px-6 cus_secondary_button"
             : ""
-        }
+          }
         ${btnType === "text" ? "btn-link" : ""}
         ${fit === "container" ? "w-100" : ""}
         `}
