@@ -370,7 +370,7 @@ const Home = () => {
               </h3>
               <HeroButton
                 text="查看更多"
-                onClick={() => navigate("/room_detail")}
+                onClick={() => navigate(`/room_detail/${activeRoomData._id}`)}
               />
               <div className="d-flex justify-content-end mt-5 mt-md-7">
                 <img
