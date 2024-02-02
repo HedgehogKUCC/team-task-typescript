@@ -45,6 +45,10 @@
   width: 97px;
   height: 97px;
 }
+.square_75 {
+  width: 75px;
+  height: 75px;
+}
 
 .fs-7 {
   font-size: 1rem;
@@ -54,27 +58,46 @@
   border-left: 4px solid $primary;
 }
 // font-size
-.fs-28{
+.fs-20 {
+  font-size: 20px;
+}
+.fs-24 {
+  font-size: 24px;
+}
+.fs-28 {
   font-size: 28px;
 }
-.fs-40{
+.fs-32 {
+  font-size: 32px;
+}
+.fs-sm-32 {
+  @include media-breakpoint-up(sm) {
+    font-size: 32px !important;
+  }
+}
+.fs-40 {
   font-size: 40px;
 }
-.fs-48{
+.fs-48 {
   font-size: 48px;
 }
-
 
 // border-radius
 .rounded-8 {
   border-radius: 8px;
 }
-.rounded-20{
+.rounded-20 {
   border-radius: 20px;
+}
+.rounded-right-top {
+  border-radius: 0 0.25rem 0 0;
+}
+.rounded-right-bottom {
+  border-radius: 0 0 0.25rem 0;
 }
 
 //img
-.object-fit-cover{
+.object-fit-cover {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -112,6 +135,22 @@
   }
 }
 
+.border-md-bottom {
+  @include media-breakpoint-up(md) {
+    border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+  }
+}
+
+.carousel_inner_rounded {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+
+  @include media-breakpoint-up(md) {
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 8px;
+  }
+}
+
 @media screen and (min-width: 768px) {
   .fs-md-1 {
     font-size: 48px !important;
@@ -137,13 +176,11 @@
   
 }
 
-
 @media screen and (max-width: 576px) {
   .fs-7 {
     font-size: 0.875rem;
   }
-  .fs-48{
+  .fs-48 {
     font-size: 32px;
   }
 }
-
