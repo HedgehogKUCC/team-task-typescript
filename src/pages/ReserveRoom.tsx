@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SizeIcon from "/ic_Size.svg";
 import BedIcon from "/ic_Bed.svg";
 import PersonIcon from "/ic_Person.svg";
@@ -17,14 +17,17 @@ import { apiAddOrder } from "../api/apiOrder";
 import type { Room } from "../api/interface/room";
 import type { IOderForm } from "../api/interface/orders";
 import type { IApiUserResult } from "../api/interface/user";
-import { useAppSelector } from "../store/hook";
+
+import { useAppSelector, useAppDispatch } from "../store/hook";
 import { selectUser } from "../store/slices/userSlice";
+import { selectReserve } from "../store/slices/reserveSlice";
+
 import { setOrder } from "../store/slices/orderSlice";
-import { useAppDispatch } from "../store/hook";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { DateRange } from "react-date-range";
 import { zhTW } from "date-fns/locale";
+
 const ReserveRoom = () => {
   interface Address {
     zipcode: number;
@@ -46,6 +49,7 @@ const ReserveRoom = () => {
     userInfo: UserInfo;
   }
 
+  const reserveStore = useAppSelector(selectReserve);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const dateRangeRef = useRef<HTMLDivElement | null>(null);
@@ -66,9 +70,7 @@ const ReserveRoom = () => {
   const [roomData, setRoomData] = useState<Room>();
   const [postData, setPostData] = useState<IOderForm>();
   const [isApplyUserData, setIsApplyUserData] = useState<boolean>(false); //是否套用會員資料
-  const [selectRoomId, setSelectRoomId] = useState<string>(
-    "6597f7f8c9e6ae814611a455",
-  ); //選擇房型id
+  const [selectRoomId, setSelectRoomId] = useState<string>(""); //選擇房型id
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [reservePeople, setReservePeople] = useState<number>(2); //訂房人數
   const [isOpenEditReservePeople, setIsOpenEditReservePeople] =
@@ -81,6 +83,23 @@ const ReserveRoom = () => {
   //房間格局
   const roomLayout = ["市景", "獨立衛浴", "客廳", "客房", "樓層電梯"];
   const options = [1, 2, 3, 4];
+
+  const ROOM_ID = selectRoomId || reserveStore.roomId;
+
+  // 第一次載入頁面時，取得房間資料
+  useEffect(() => {
+    document.documentElement.scrollTop = 0;
+
+    setSelectDate([
+      {
+        startDate: new Date(reserveStore.startDate),
+        endDate: new Date(reserveStore.endDate),
+        key: "selection",
+      }
+    ]);
+    setReservePeople(reserveStore.people);
+
+  }, []);
 
   //選擇縣市後，取得區域資料
   const handleChangeCounty = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -140,7 +159,7 @@ const ReserveRoom = () => {
   useEffect(() => {
     //取得房間資料
     const getRoomData = async () => {
-      const res = await apiGetRoom(selectRoomId);
+      const res = await apiGetRoom(ROOM_ID);
       if (res) {
         setRoomData(res.result);
       }
@@ -186,7 +205,7 @@ const ReserveRoom = () => {
     setLoading(true);
 
     const postForm: IOderForm = {
-      roomId: selectRoomId || "6597f7f8c9e6ae814611a455", //可從路徑取得 或 存入store
+      roomId: ROOM_ID,
       checkInDate: formattedDate(selectDate[0].startDate), //存入store
       checkOutDate: formattedDate(selectDate[0].endDate), // 存入store
       peopleNum: reservePeople, //存入store
@@ -216,7 +235,7 @@ const ReserveRoom = () => {
         }
       });
     }
-    //3秒後跳轉至訂單成功頁面 並清空postData 與 loading
+    // 3秒後跳轉至訂單成功頁面 並清空postData 與 loading
     setTimeout(() => {
       //傳遞訂單資料至訂單成功頁面
       navigate("/reserve_success");
@@ -245,6 +264,12 @@ const ReserveRoom = () => {
       setIsApplyUserData(true);
     }
   }, [formValues, postData, loading, isApplyUserData]);
+
+  const goBeforePage = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    navigate(`/room_detail/${ROOM_ID}`, { replace: true });
+  };
+
   return (
     <>
       <Navbar isEscapeDocumentFlow={false} />
@@ -258,12 +283,12 @@ const ReserveRoom = () => {
             currentRoomId={selectRoomId}
           ></EditRoomModal>
           <div className="d-flex align-items-center  mb-7">
-            <Link to="/">
+            <a href="#" onClick={goBeforePage}>
               <i
                 className="bi bi-chevron-left text-black fw-bold me-2"
                 style={{ fontSize: "40px" }}
               ></i>
-            </Link>
+            </a>
             <h2 className="fw-bold">確認訂房資訊</h2>
           </div>
 
@@ -282,7 +307,7 @@ const ReserveRoom = () => {
                   >
                     選擇房型
                   </h4>
-                  <p>{roomData?.name}</p>
+                  <p>{roomData && roomData?.name}</p>
                 </div>
                 <button
                   type="button"
@@ -588,7 +613,7 @@ const ReserveRoom = () => {
                       alt="Size Icon"
                       style={{ fontSize: "24px" }}
                     />
-                    <p className="fw-bold">{roomData?.areaInfo}</p>
+                    <p className="fw-bold">{roomData && roomData?.areaInfo}</p>
                   </div>
                   <div className=" rounded-8 bg-white p-3 me-3 square_97">
                     <img
@@ -597,7 +622,7 @@ const ReserveRoom = () => {
                       alt="Bed Icon"
                       style={{ fontSize: "24px" }}
                     />
-                    <p className="fw-bold">{roomData?.bedInfo}</p>
+                    <p className="fw-bold">{roomData && roomData?.bedInfo}</p>
                   </div>
                   <div className=" rounded-8 bg-white p-3 square_97">
                     <img
@@ -606,7 +631,7 @@ const ReserveRoom = () => {
                       alt="Person Icon"
                       style={{ fontSize: "24px" }}
                     />
-                    <p className="fw-bold">1-{roomData?.maxPeople}人</p>
+                    <p className="fw-bold">1-{roomData && roomData?.maxPeople}人</p>
                   </div>
                 </div>
                 <h4
@@ -634,7 +659,7 @@ const ReserveRoom = () => {
                   房內設備
                 </h4>
                 <div className=" rounded-8 bg-white p-4 d-flex flex-wrap gap-2">
-                  {roomData?.facilityInfo.map(
+                  {roomData?.facilityInfo && roomData?.facilityInfo.map(
                     (item, index) =>
                       item.isProvide && (
                         <span
@@ -660,7 +685,7 @@ const ReserveRoom = () => {
                 </h4>
 
                 <div className=" rounded-8 bg-white p-4 d-flex flex-wrap gap-2">
-                  {roomData?.amenityInfo.map(
+                  {roomData?.amenityInfo && roomData?.amenityInfo.map(
                     (item, index) =>
                       item.isProvide && (
                         <span
@@ -684,13 +709,13 @@ const ReserveRoom = () => {
               <div className="rounded-20 p-7 bg-white">
                 <img
                   className="object-fit-cover mb-7 rounded-8"
-                  src={roomData?.imageUrl}
+                  src={roomData && roomData?.imageUrl}
                   alt="room"
                 />
                 <h4 className="fs-28 fw-bold mb-5">價格詳情</h4>
                 <div className="d-flex justify-content-between ">
                   <p>
-                    NT$ {roomData?.price}
+                    NT$ {roomData && roomData?.price}
                     <span className="px-2">X</span>
                     {roomNights}晚
                   </p>
