@@ -32,6 +32,10 @@ const ReserveRoomSuccess = () => {
   const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
+    document.documentElement.scrollTop = 0;
+  }, []);
+
+  useEffect(() => {
     if (order) {
       const nights = calculateNight(order.checkInDate, order.checkOutDate);
       setReserveNights(nights);
@@ -46,7 +50,7 @@ const ReserveRoomSuccess = () => {
     if (!order && user) {
       //如果沒有order資料
       //前往/reserve頁面
-      navigate("/reserve");
+      navigate("/reserve", { replace: true });
     }
   }, [order, navigate, user]);
 
