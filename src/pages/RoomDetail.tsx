@@ -59,6 +59,9 @@ const RoomDetail = () => {
   const [defaultDate, setDefaultDate] = useState('');
   const [defaultCheckoutDate, setDefaultCheckoutDate] = useState('');
 
+  // 輪播資料
+  const [activeIndex, setActiveIndex] = useState(0);
+
   useEffect(() => {
     document.documentElement.scrollTop = 0;
 
@@ -176,9 +179,59 @@ const RoomDetail = () => {
     <>
       <Navbar isEscapeDocumentFlow={false} />
       <section className="bg_primary_10">
+        {/* 768px 以下改為輪播 */}
+        <div
+          id="carouselExampleIndicators"
+          className="d-md-none carousel slide carousel-fade"
+          data-bs-ride="carousel"
+        >
+          <div style={{ right: "unset", marginLeft: "8%" }} className="carousel-indicators">
+            {roomData && roomData?.imageUrlList.map((_imageUrl, i) => (
+              <button
+                key={i + 1}
+                type="button"
+                data-bs-target="#carouselExampleIndicators"
+                data-bs-slide-to={i}
+                className={i === activeIndex ? "active" : ""}
+                aria-current={i === activeIndex ? "true" : "false"}
+                aria-label={`Slide ${i + 1}`}
+                onClick={() => setActiveIndex(i)}
+                style={{ width: `${i === activeIndex ? "60px" : "30px"}` }}
+              ></button>
+            ))}
+          </div>
+          <div className="carousel-inner">
+            {roomData && roomData?.imageUrlList.map((imageUrl, i) => {
+              return (
+                <div
+                  key={i + 1}
+                  className={`carousel-item ${
+                    i === activeIndex ? "active" : ""
+                  }`}
+                >
+                  <figure className="ratio ratio-16x9 overflow-hidden mb-0 h-100">
+                    <img
+                      src={imageUrl}
+                      className="d-block"
+                      alt={`Slide ${i + 1}`}
+                    />
+                  </figure>
+                </div>
+              );
+            })}
+            <button
+              type="button"
+              style={{ position: "absolute", bottom: "20px", right: "12px", zIndex: "1" }}
+              className="btn btn-outline-primary px-6 cus_secondary_button"
+              onClick={goToRooms}
+            >
+              看更多
+            </button>
+          </div>
+        </div>
         <div className="container">
 
-          <div className="row px-2 py-8">
+          <div className="d-none d-md-flex row px-2 py-8">
             <>
               <div className="col-7 p-0 pe-2">
                 <img
@@ -219,7 +272,7 @@ const RoomDetail = () => {
             </>
           </div>
           <div className="row py-9 text-black">
-            <div className="col-7">
+            <div className="col-12 col-md-7">
               <div className="mb-8">
                 <h1>{roomData?.name}</h1>
                 <p>{roomData?.description}</p>
@@ -249,10 +302,12 @@ const RoomDetail = () => {
                   <div className="bg-primary rounded me-15" style={{ width: "4px", height: "30px" }}></div>
                   <h5>房間格局</h5>
                 </div>
-                <div className="bg-white px-3 py-3 border rounded-3 border-primary border-opacity-25 d-flex">
+                <div className="bg-white px-3 py-3 border rounded-3 border-primary border-opacity-25 d-flex flex-wrap">
                   {roomData?.roomlayoutInfo.map((item, index) => item.isProvide ? (
                     <div className="d-flex py-3 me-7" key={index}>
-                      <img src={CheckIcon} alt="Size Icon" /><span className="mb-0">{item.title}</span>
+                      <div className="flex-shrink-0">
+                        <img src={CheckIcon} alt="Size Icon" /><span className="mb-0">{item.title}</span>
+                      </div>
                     </div>
                   ) : null)}
                 </div>
@@ -262,10 +317,12 @@ const RoomDetail = () => {
                   <div className="bg-primary rounded me-15" style={{ width: "4px", height: "30px" }}></div>
                   <h5>房內設備</h5>
                 </div>
-                <div className="bg-white px-3 py-3 border rounded-3 border-primary border-opacity-25 d-flex">
+                <div className="bg-white px-3 py-3 border rounded-3 border-primary border-opacity-25 d-flex flex-wrap">
                   {roomData?.facilityInfo.map((item, index) => item.isProvide ? (
                     <div className="d-flex py-3 me-7" key={index}>
-                      <img src={CheckIcon} alt="Size Icon" /><span className="mb-0">{item.title}</span>
+                      <div className="flex-shrink-0">
+                        <img src={CheckIcon} alt="Size Icon" /><span className="mb-0">{item.title}</span>
+                      </div>
                     </div>
                   ) : null)}
                 </div>
@@ -275,10 +332,12 @@ const RoomDetail = () => {
                   <div className="bg-primary rounded me-15" style={{ width: "4px", height: "30px" }}></div>
                   <h5>備品提供</h5>
                 </div>
-                <div className="bg-white px-3 py-3 border rounded-3 border-primary border-opacity-25 d-flex">
+                <div className="bg-white px-3 py-3 border rounded-3 border-primary border-opacity-25 d-flex flex-wrap">
                   {roomData?.amenityInfo.map((item, index) => item.isProvide ? (
                     <div className="d-flex py-3 me-7" key={index}>
-                      <img src={CheckIcon} alt="Size Icon" /><span className="mb-0">{item.title}</span>
+                      <div className="flex-shrink-0">
+                        <img src={CheckIcon} alt="Size Icon" /><span className="mb-0">{item.title}</span>
+                      </div>
                     </div>
                   ) : null)}
                 </div>
@@ -297,7 +356,7 @@ const RoomDetail = () => {
                 </div>
               </div>
             </div>
-            <div className="col-5">
+            <div className="col-12 col-md-5">
               <div className="bg-white px-3 py-3 border rounded-3 border-primary border-opacity-25 d-flex">
                 <div className="py-3">
                   <p className="fs-24 pb-7">預訂房型</p>
