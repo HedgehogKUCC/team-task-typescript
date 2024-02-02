@@ -271,13 +271,13 @@ const RoomDetail = () => {
               </div>
             </>
           </div>
-          <div className="row py-9 text-black">
+          <div className="row py-7 py-md-9 text-black">
             <div className="col-12 col-md-7">
-              <div className="mb-8">
+              <div className="mb-5 mb-md-8">
                 <h1>{roomData?.name}</h1>
                 <p>{roomData?.description}</p>
               </div>
-              <div className="mb-8">
+              <div className="mb-5 mb-md-8">
                 <div className="d-flex mb-3">
                   <div className="bg-primary rounded me-15" style={{ width: "4px", height: "30px" }}></div>
                   <h5>房型基本資訊</h5>
@@ -297,7 +297,7 @@ const RoomDetail = () => {
                   </div>
                 </div>
               </div>
-              <div className="mb-8">
+              <div className="mb-5 mb-md-8">
                 <div className="d-flex mb-3">
                   <div className="bg-primary rounded me-15" style={{ width: "4px", height: "30px" }}></div>
                   <h5>房間格局</h5>
@@ -312,7 +312,7 @@ const RoomDetail = () => {
                   ) : null)}
                 </div>
               </div>
-              <div className="mb-8">
+              <div className="mb-5 mb-md-8">
                 <div className="d-flex mb-3">
                   <div className="bg-primary rounded me-15" style={{ width: "4px", height: "30px" }}></div>
                   <h5>房內設備</h5>
@@ -327,7 +327,7 @@ const RoomDetail = () => {
                   ) : null)}
                 </div>
               </div>
-              <div className="mb-8">
+              <div className="mb-5 mb-md-8">
                 <div className="d-flex mb-3">
                   <div className="bg-primary rounded me-15" style={{ width: "4px", height: "30px" }}></div>
                   <h5>備品提供</h5>
@@ -342,7 +342,7 @@ const RoomDetail = () => {
                   ) : null)}
                 </div>
               </div>
-              <div className="mb-8">
+              <div className="mb-5 mb-md-8">
                 <div className="d-flex mb-3">
                   <div className="bg-primary rounded me-15" style={{ width: "4px", height: "30px" }}></div>
                   <h5>訂房須知</h5>
