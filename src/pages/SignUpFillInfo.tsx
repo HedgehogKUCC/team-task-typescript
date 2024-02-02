@@ -261,7 +261,7 @@ const SignUpFillInfo = () => {
               手機號碼
             </label>
             <input
-              type="number"
+              type="tel"
               className={`form-control ${
                 errors.phone && "is-invalid border-3"
               }`}
