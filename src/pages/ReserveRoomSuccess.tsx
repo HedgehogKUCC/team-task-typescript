@@ -81,6 +81,9 @@ const ReserveRoomSuccess = () => {
                 <button
                   className="btn btn-primary text-white"
                   style={{ padding: "16px 60px" }}
+                  onClick={() => {
+                    navigate("/member/order", {replace: true});
+                  }}
                 >
                   前往我的訂單
                 </button>
