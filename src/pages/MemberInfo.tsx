@@ -360,7 +360,7 @@ const MemberInfo = () => {
                     手機號碼
                   </label>
                   <input
-                    type="text"
+                    type="tel"
                     className={`form-control ${errors.phone && "is-invalid"}`}
                     id="phone"
                     placeholder="請輸入手機號碼"
