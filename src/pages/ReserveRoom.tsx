@@ -238,7 +238,7 @@ const ReserveRoom = () => {
     // 3秒後跳轉至訂單成功頁面 並清空postData 與 loading
     setTimeout(() => {
       //傳遞訂單資料至訂單成功頁面
-      navigate("/reserve_success");
+      navigate("/reserve_success", { replace: true });
       setPostData(undefined);
       setLoading(false);
     }, 3000);
