@@ -79,8 +79,8 @@ const MemberOrder = () => {
   };
 
   // 前往房型介紹頁
-  const goToRoomDetail = () => {
-    navigate("/room_detail");
+  const goToRoomDetail = (roomId: string) => {
+    navigate(`/room_detail/${roomId}`);
   };
 
   // 取消預定
@@ -246,7 +246,7 @@ const MemberOrder = () => {
                       text="查看詳情"
                       btnType="primary"
                       fit="container"
-                      onClick={() => goToRoomDetail()}
+                      onClick={() => goToRoomDetail(order.roomId._id)}
                     />
                   </div>
                 </div>
