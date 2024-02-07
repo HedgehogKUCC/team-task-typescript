@@ -50,7 +50,7 @@ const MemberOrder = () => {
     const ordersBeforeToday = orderList.filter((order) => {
       const checkInDate = new Date(order.checkInDate);
       checkInDate.setHours(0, 0, 0, 0);
-      return checkInDate > today && order.status === 0;
+      return checkInDate >= today && order.status === 0;
     });
 
     return ordersBeforeToday;
