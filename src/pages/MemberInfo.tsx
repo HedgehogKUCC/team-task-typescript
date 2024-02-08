@@ -342,6 +342,10 @@ const MemberInfo = () => {
                         value: true,
                         message: "姓名 必填",
                       },
+                      pattern: {
+                        value: /^[\u4e00-\u9fa5a-zA-Z]{2,}$/g,
+                        message: "姓名 只能中文和英文，最少兩個字",
+                      },
                     })}
                   />
                   {errors.name && (
@@ -368,6 +372,10 @@ const MemberInfo = () => {
                       required: {
                         value: true,
                         message: "手機號碼 必填",
+                      },
+                      pattern: {
+                        value: /^09\d{8}$/g,
+                        message: "手機號碼 格式有誤",
                       },
                     })}
                   />
