@@ -99,7 +99,6 @@ const Login = () => {
           text: "電子信箱或密碼有誤",
           icon: "error",
           showConfirmButton: false,
-          timer: 1200,
         });
       })
       .finally(() => {
@@ -114,7 +113,6 @@ const Login = () => {
         text: "forgotPasswordModal didn't find",
         icon: "error",
         showConfirmButton: false,
-        timer: 1200,
       });
       return;
     }
@@ -127,7 +125,6 @@ const Login = () => {
         text: "forgotPasswordModal didn't find",
         icon: "error",
         showConfirmButton: false,
-        timer: 1200,
       });
       return;
     }
@@ -140,7 +137,6 @@ const Login = () => {
         text: "modalRef.current didn't find",
         icon: "error",
         showConfirmButton: false,
-        timer: 1200,
       });
       return;
     }
