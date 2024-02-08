@@ -20,8 +20,9 @@
   position: absolute;
   top: 38px;
   right: 38px;
-  width: 28px;
-  height: 28px;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
 
   &::before,
   &::after {
@@ -29,7 +30,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 28px;
+    width: 35px;
     height: 5px;
     background: #fff;
   }
@@ -66,5 +67,17 @@
         color: $primary;
       }
     }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .x_icon {
+    right: 26px;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .x_icon {
+    right: 8px;
   }
 }

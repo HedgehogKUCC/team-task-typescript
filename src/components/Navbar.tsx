@@ -97,7 +97,11 @@ const Navbar = ({
                 alt=""
               />
             </Link>
-            <div className="d-block d-md-none" onClick={barIconClickHandler}>
+            <div
+              className="d-block d-md-none"
+              style={{ cursor: "pointer" }}
+              onClick={barIconClickHandler}
+            >
               <div className={styles.bar_icon_line_1}></div>
               <div className={styles.bar_icon_line_2}></div>
               <div className={styles.bar_icon_line_3}></div>
