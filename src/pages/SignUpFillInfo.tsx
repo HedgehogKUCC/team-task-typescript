@@ -174,6 +174,7 @@ const SignUpFillInfo = () => {
           text: "註冊成功，請立即登入",
           icon: "success",
           showConfirmButton: false,
+          timer: 1200,
         }).then(() => {
           navigate("/login");
         });
