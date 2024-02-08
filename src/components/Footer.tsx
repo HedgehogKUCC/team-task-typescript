@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <>
       {/* Desktop */}
-      <section className="pt-8 pb-9 d-none d-xl-block">
+      <section className="pt-8 pb-9 d-none d-lg-block">
         <div className="container">
           <div className="d-flex justify-content-between">
             <div>
@@ -53,7 +53,7 @@ const Footer = () => {
       {/* Mobile */}
       <section
         style={{ paddingLeft: "12px", paddingRight: "12px" }}
-        className="py-8 d-block d-xl-none"
+        className="py-8 d-block d-lg-none"
       >
         <div className="row justify-content-center">
           <div className="col-12 col-sm-7 col-lg-4">

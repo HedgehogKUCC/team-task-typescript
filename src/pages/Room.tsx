@@ -8,7 +8,7 @@ import PersonIcon from "/ic_Person.svg";
 import CarIcon from "/ic_Car.svg";
 import ArrowRightIcon from "/ic_ArrowRight.svg";
 import { apiRoomsList } from "../api";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Room = () => {
   // 輪播資料
@@ -126,8 +126,9 @@ const Room = () => {
                 return (
                   <div
                     key={item.id}
-                    className={`carousel-item ${index === carouselActiveIndex ? "active" : ""
-                      } h-100`}
+                    className={`carousel-item ${
+                      index === carouselActiveIndex ? "active" : ""
+                    } h-100`}
                   >
                     <figure className="ratio ratio-16x9 overflow-hidden mb-0 h-100 img-fluid">
                       <img
@@ -149,14 +150,30 @@ const Room = () => {
             <div className="row flex-column flex-md-row justify-content-center align-items-center">
               <div className="col-6 col-lg-5 ps-md-0 text-primary border-md-bottom pb-md-7 border_primary_white z-index">
                 <h2 className="d-none d-md-block">享樂酒店</h2>
-                <h2 className="d-none d-sm-block d-md-none text-center fs-28">享樂酒店</h2>
-                <h5 className="d-none d-md-block mb-0">Enjoyment Luxury Hotel</h5>
-                <p className="d-none d-sm-block d-md-none mb-0 text-center">Enjoyment Luxury Hotel</p>
-                <div style={{ margin: "20px auto 40px", width: "2px", height: "83px", background: "linear-gradient(#bf9d7d, #fff)" }} className="d-none d-sm-block d-md-none"></div>
+                <h2 className="d-none d-sm-block d-md-none text-center fs-28">
+                  享樂酒店
+                </h2>
+                <h5 className="d-none d-md-block mb-0">
+                  Enjoyment Luxury Hotel
+                </h5>
+                <p className="d-none d-sm-block d-md-none mb-0 text-center">
+                  Enjoyment Luxury Hotel
+                </p>
+                <div
+                  style={{
+                    margin: "20px auto 40px",
+                    width: "2px",
+                    height: "83px",
+                    background: "linear-gradient(#bf9d7d, #fff)",
+                  }}
+                  className="d-none d-sm-block d-md-none"
+                ></div>
               </div>
               <div className="col-4 col-lg-3 d-md-flex align-items-center justify-content-end">
                 <h2 className="d-none d-md-block mb-0 fs-48">客房旅宿</h2>
-                <h2 className="d-block d-md-none mb-0 text-center fs-20 fs-sm-32">客房旅宿</h2>
+                <h2 className="d-block d-md-none mb-0 text-center fs-20 fs-sm-32">
+                  客房旅宿
+                </h2>
               </div>
             </div>
           </div>
@@ -172,13 +189,17 @@ const Room = () => {
           <div className="row">
             {roomList.map((item, roomIndex) => (
               <div
-                className={`bg-white rounded d-flex flex-column flex-md-row px-0 ${roomList.length === roomIndex + 1 ? "my-md-5 mb-0" : "mb-5 my-md-5" }`}
+                className={`bg-white rounded d-flex flex-column flex-md-row px-0 ${
+                  roomList.length === roomIndex + 1
+                    ? "my-md-5 mb-0"
+                    : "mb-5 my-md-5"
+                }`}
                 key={roomIndex}
               >
                 {/* 輪播區塊 */}
                 <div
                   id={`carouselExampleIndicators-${roomIndex}`}
-                  className="col-12 col-md-7 carousel slide carousel-fade"
+                  className="col-12 col-md-6 col-lg-7 carousel slide carousel-fade"
                   data-bs-ride="carousel"
                 >
                   <div className="carousel-indicators mx-0">
@@ -204,8 +225,9 @@ const Room = () => {
                       return (
                         <div
                           key={i + 1}
-                          className={`carousel-item ${i === activeIndex ? "active" : ""
-                            } h-100`}
+                          className={`carousel-item ${
+                            i === activeIndex ? "active" : ""
+                          } h-100`}
                         >
                           <figure className="ratio ratio-16x9 overflow-hidden mb-0 h-100">
                             <img
@@ -245,7 +267,7 @@ const Room = () => {
                 </div>
 
                 {/* 內容區塊  */}
-                <div className="col-12 col-md-5 px-2 px-md-7 py-7">
+                <div className="col-12 col-md-6 col-lg-5 px-3 px-md-5 px-lg-7 py-3 py-md-7">
                   <p className="h2 text-dark">{item.name}</p>
                   <p className="text-gray-dark mb-0">{item.description}</p>
                   <div className="d-flex text-dark my-7  border-bottom pb-7 border_primary_white">
@@ -264,7 +286,12 @@ const Room = () => {
                   </div>
                   <div className="d-flex align-items-center justify-content-between py-3">
                     <p className="h5 text-primary mb-0">NT$ {item.price}</p>
-                    <img style={{ cursor: "pointer" }} src={ArrowRightIcon} alt="ArrowRight Icon" onClick={() => handleClick(item._id)} />
+                    <img
+                      style={{ cursor: "pointer" }}
+                      src={ArrowRightIcon}
+                      alt="ArrowRight Icon"
+                      onClick={() => handleClick(item._id)}
+                    />
                   </div>
                 </div>
               </div>
