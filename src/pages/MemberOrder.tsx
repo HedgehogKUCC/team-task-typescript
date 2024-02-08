@@ -36,7 +36,7 @@ const MemberOrder = () => {
     const ordersBeforeToday = orderList.filter((order) => {
       const checkOutDate = new Date(order.checkOutDate);
       checkOutDate.setHours(0, 0, 0, 0);
-      return checkOutDate < today && order.status === 0;
+      return checkOutDate < today || order.status === -1;
     });
 
     return ordersBeforeToday;
@@ -343,7 +343,7 @@ const MemberOrder = () => {
                             退房：{dateTimeFormate(order.checkOutDate)}
                           </div>
                         </div>
-                        <div className="text-gray-dark fs-7 fw-bold">
+                        <span className="text-gray-dark fs-7 fw-bold">
                           NT$
                           {(
                             order.roomId.price *
@@ -353,7 +353,12 @@ const MemberOrder = () => {
                               ) -
                             1000
                           ).toLocaleString()}
-                        </div>
+                        </span>
+                        {order.status === -1 && (
+                          <span className="badge bg-secondary ms-4">
+                            已取消
+                          </span>
+                        )}
                       </div>
                     </div>
                   ))
